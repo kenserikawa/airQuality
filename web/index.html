@@ -1,12 +1,45 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-category="neutral">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="See the air quality around you, in real time, with a sky that changes color with the AQI.">
+        <meta name="theme-color" content="#0F172A">
         <title>AirQuality — Air quality near you</title>
     </head>
     <body>
-        <div id="app"></div>
+        <div class="sky" aria-hidden="true"></div>
+        <canvas id="particles" aria-hidden="true"></canvas>
+
+        <header class="fixed inset-x-0 top-0 z-30 px-4 pt-4 lg:px-8">
+            <div class="mx-auto flex max-w-[1200px] flex-wrap items-center gap-3 lg:flex-nowrap lg:gap-6">
+                <a href="./" class="flex items-center gap-3 font-display text-lg font-semibold tracking-tight lg:text-xl" aria-label="AirQuality home">
+                    <span id="logo-mark" class="glass-pill flex h-10 w-10 items-center justify-center !rounded-xl"></span>
+                    AirQuality
+                </a>
+                <div id="search" class="order-3 w-full lg:order-none lg:mx-auto lg:w-[560px]"></div>
+                <button id="locate" type="button" class="glass-pill ml-auto flex h-11 items-center gap-2 px-4 text-sm font-semibold lg:ml-0" aria-label="Use my location">
+                    <span class="hidden sm:inline">Use my location</span>
+                </button>
+            </div>
+        </header>
+
+        <main>
+            <section id="hero" class="mx-auto flex min-h-[100svh] max-w-[1200px] flex-col justify-center px-4 pt-36 pb-10 lg:px-8 lg:pt-28" aria-labelledby="hero-title"></section>
+            <div class="mx-auto flex max-w-[1200px] flex-col gap-6 px-4 pb-16 lg:px-8">
+                <section id="forecast" class="glass p-6 lg:p-8" aria-labelledby="forecast-title" hidden></section>
+                <div class="grid gap-6 lg:grid-cols-[2fr_1fr]">
+                    <section id="pollutants" class="glass p-6 lg:p-8" aria-labelledby="pollutants-title" hidden></section>
+                    <section id="weather" class="glass p-6 lg:p-8" aria-labelledby="weather-title" hidden></section>
+                </div>
+                <section id="map" class="glass p-6 lg:p-8" aria-labelledby="map-title" hidden></section>
+                <section id="scale" class="glass p-6 lg:p-8" aria-labelledby="scale-title" hidden></section>
+            </div>
+        </main>
+
+        <footer id="footer" class="glass !rounded-none !border-x-0 !border-b-0 px-4 py-5 text-sm text-white/75 lg:px-8"></footer>
+        <div id="announcer" class="sr-only" aria-live="polite"></div>
+
         <script type="module" src="/src/main.js"></script>
     </body>
 </html>

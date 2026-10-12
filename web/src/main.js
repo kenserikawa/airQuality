@@ -1,1 +1,9 @@
+import '@fontsource/sora/200.css';
+import '@fontsource/sora/300.css';
+import '@fontsource/sora/600.css';
+import '@fontsource/manrope/400.css';
+import '@fontsource/manrope/500.css';
+import '@fontsource/manrope/600.css';
+import '@fontsource/manrope/700.css';
+import 'leaflet/dist/leaflet.css';
 import './styles.css';
