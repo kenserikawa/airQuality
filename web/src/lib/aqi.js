@@ -230,3 +230,18 @@ export function blend(hexBase, hexOver, alpha) {
     const over = toRgb(hexOver);
     return toHex(base.map((channel, i) => over[i] * alpha + channel * (1 - alpha)));
 }
+
+// Posición 0..1 en la barra de 6 tramos iguales (0–50, 50–100, 100–150, 150–200, 200–300, 300–500).
+const SCALE_BREAKS = [0, 50, 100, 150, 200, 300, 500];
+
+export function scalePosition(aqi) {
+    const value = parseAqi(aqi);
+    if (value === null) {
+        return null;
+    }
+    const clamped = Math.min(Math.max(value, 0), 500);
+    const segments = SCALE_BREAKS.length - 1;
+    const index = Math.min(SCALE_BREAKS.findIndex((limit, i) => clamped <= SCALE_BREAKS[i + 1]), segments - 1);
+    const [low, high] = [SCALE_BREAKS[index], SCALE_BREAKS[index + 1]];
+    return (index + (clamped - low) / (high - low)) / segments;
+}

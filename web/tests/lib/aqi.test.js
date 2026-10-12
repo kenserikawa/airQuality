@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'vitest';
 import {
     CATEGORIES, NEUTRAL, blend, contrastRatio, forecastDays, forecastKeys, getCategory, isStale,
-    parseAqi, pickPollutants, pickWeather, pollutantLabel, relativeTime, splitStationName,
+    parseAqi, pickPollutants, pickWeather, pollutantLabel, relativeTime, scalePosition, splitStationName,
 } from '../../src/lib/aqi.js';
 
 describe('getCategory', () => {
@@ -119,4 +119,12 @@ describe('tiempo y nombres', () => {
         expect(pollutantLabel('pm25')).toBe('PM2.5');
         expect(pollutantLabel('xx')).toBe('XX');
     });
+});
+
+describe('scalePosition', () => {
+    test.each([
+        [0, 0], [25, 1 / 12], [50, 1 / 6], [100, 2 / 6], [150, 3 / 6], [200, 4 / 6], [300, 5 / 6], [400, 5.5 / 6], [500, 1], [900, 1],
+    ])('%s → %s', (aqi, position) => expect(scalePosition(aqi)).toBeCloseTo(position, 5));
+
+    test('sin lectura → null', () => expect(scalePosition('-')).toBeNull());
 });

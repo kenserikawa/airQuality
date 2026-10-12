@@ -35,6 +35,7 @@ export function icon(name, { size = 20, className = '' } = {}) {
     svg.setAttribute('stroke-linecap', 'round');
     svg.setAttribute('stroke-linejoin', 'round');
     svg.setAttribute('aria-hidden', 'true');
+    svg.setAttribute('data-icon', name);
     if (className) {
         svg.setAttribute('class', className);
     }
