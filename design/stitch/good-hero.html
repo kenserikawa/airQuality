@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Aether AQI — Real-Time Atmospheric Monitoring</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&amp;family=Sora:wght@200;300;400;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration -->
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "error": "#ff716c",
+            "on-secondary-fixed": "#504026",
+            "on-primary-fixed": "#00443a",
+            "on-error": "#490006",
+            "on-tertiary": "#654200",
+            "secondary-fixed-dim": "#efd7b3",
+            "primary-fixed-dim": "#8cdecb",
+            "background": "#060e20",
+            "surface-variant": "#142449",
+            "surface-container-highest": "#142449",
+            "tertiary": "#ffcc83",
+            "on-surface-variant": "#9baad6",
+            "on-secondary": "#4d3e24",
+            "surface-bright": "#172b54",
+            "on-tertiary-container": "#593a00",
+            "tertiary-fixed-dim": "#efac3f",
+            "on-primary": "#066b5d",
+            "on-background": "#dee5ff",
+            "inverse-surface": "#faf8ff",
+            "on-primary-container": "#006254",
+            "on-surface": "#dee5ff",
+            "tertiary-dim": "#efac3f",
+            "on-error-container": "#ff9993",
+            "secondary-container": "#31240c",
+            "surface-dim": "#060e20",
+            "secondary": "#dac3a1",
+            "outline-variant": "#38476d",
+            "primary-fixed": "#9aecd9",
+            "surface-container-low": "#081329",
+            "inverse-on-surface": "#4d556b",
+            "on-secondary-fixed-variant": "#6e5d40",
+            "inverse-primary": "#066b5d",
+            "on-tertiary-fixed-variant": "#654200",
+            "secondary-fixed": "#fde5c0",
+            "primary-dim": "#8cdecb",
+            "error-dim": "#c94947",
+            "surface-tint": "#e5fff7",
+            "on-primary-fixed-variant": "#006456",
+            "surface-container": "#0c1934",
+            "error-container": "#8a1a1e",
+            "surface-container-high": "#101e3e",
+            "secondary-dim": "#ccb694",
+            "tertiary-fixed": "#ffba4b",
+            "primary-container": "#a8fbe7",
+            "surface-container-lowest": "#000000",
+            "tertiary-container": "#ffba4b",
+            "surface": "#060e20",
+            "outline": "#65759e",
+            "on-secondary-container": "#b6a180",
+            "on-tertiary-fixed": "#3f2700",
+            "primary": "#e5fff7"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "fontFamily": {
+            "headline": ["Sora", "sans-serif"],
+            "display": ["Sora", "sans-serif"],
+            "body": ["Manrope", "sans-serif"],
+            "label": ["Manrope", "sans-serif"]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    .material-symbols-outlined.fill {
+      font-variation-settings: 'FILL' 1, 'wght' 400;
+    }
+
+    /* Living Sky Gradient for Good category */
+    .living-sky {
+      background: linear-gradient(180deg, #0B3D4F 0%, #176555 42%, #1F8A70 70%, #82d8b4 100%);
+    }
+
+    /* Subtle Glassmorphism Layers */
+    .glass-card {
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(28px);
+      -webkit-backdrop-filter: blur(28px);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      box-shadow: 0 20px 50px rgba(7, 30, 39, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.22);
+    }
+    
+    .glass-pill {
+      background: rgba(255, 255, 255, 0.10);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      box-shadow: 0 8px 32px rgba(6, 26, 34, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+    }
+
+    /* Slow ambient drift animations */
+    @keyframes slow-drift {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(25px, -20px) scale(1.08); }
+    }
+    @keyframes slow-drift-rev {
+      0%, 100% { transform: translate(0, 0) scale(1.05); }
+      50% { transform: translate(-30px, 15px) scale(0.96); }
+    }
+    @keyframes pulse-gentle {
+      0%, 100% { opacity: 0.85; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(1.25); }
+    }
+    @keyframes float-cue {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(6px); }
+    }
+
+    .drift-1 { animation: slow-drift 18s ease-in-out infinite; }
+    .drift-2 { animation: slow-drift-rev 22s ease-in-out infinite; }
+    .drift-dot { animation: pulse-gentle 3s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+    .float-scroll { animation: float-cue 2.4s ease-in-out infinite; }
+
+    /* Number tracking */
+    .hero-aqi-num {
+      letter-spacing: -0.055em;
+      font-variant-numeric: tabular-nums;
+    }
+  </style>
+</head>
+<body class="bg-background text-on-surface font-body min-h-screen overflow-x-hidden selection:bg-primary-container selection:text-on-primary-container relative">
+<!-- LIVING SKY CANVAS (Full-bleed 1440x900 viewport base) -->
+<div class="fixed inset-0 w-full h-full living-sky -z-20 pointer-events-none"></div>
+<!-- AMBIENT PARTICLES & VOLUMETRIC GLOW -->
+<div class="fixed inset-0 w-full h-full -z-10 overflow-hidden pointer-events-none">
+<!-- Ethereal light orbs -->
+<div class="absolute -top-20 left-1/4 w-[620px] h-[620px] rounded-full bg-primary-fixed/20 blur-[130px] drift-1"></div>
+<div class="absolute top-1/3 -right-24 w-[740px] h-[740px] rounded-full bg-primary-dim/15 blur-[160px] drift-2"></div>
+<div class="absolute bottom-0 left-1/3 w-[900px] h-[340px] rounded-full bg-[#9BE7C4]/35 blur-[110px] drift-1"></div>
+<!-- Micro atmospheric particles -->
+<div class="absolute top-[28%] left-[18%] w-1.5 h-1.5 rounded-full bg-white/40 blur-[0.5px]"></div>
+<div class="absolute top-[42%] left-[45%] w-2 h-2 rounded-full bg-white/30 blur-[1px]"></div>
+<div class="absolute top-[68%] left-[22%] w-1.5 h-1.5 rounded-full bg-white/45 blur-[0.5px]"></div>
+<div class="absolute top-[35%] right-[28%] w-2.5 h-2.5 rounded-full bg-white/25 blur-[1px]"></div>
+<div class="absolute top-[55%] right-[15%] w-1.5 h-1.5 rounded-full bg-white/35 blur-[0.5px]"></div>
+<div class="absolute top-[18%] right-[42%] w-1 h-1 rounded-full bg-white/50 blur-[0.5px]"></div>
+<!-- Horizon delicate fog mist -->
+<div class="absolute bottom-0 inset-x-0 h-40 bg-gradient-to-t from-white/20 via-white/5 to-transparent backdrop-blur-[2px]"></div>
+</div>
+<!-- TOP APP BAR (Shared Component Anchor) -->
+<header class="fixed top-4 inset-x-0 mx-auto max-w-7xl rounded-full px-6 py-3 border border-outline-variant/30 backdrop-blur-xl bg-surface-container-low/60 shadow-2xl shadow-surface-container-lowest/50 z-50"><div class="flex items-center justify-between gap-6 max-w-7xl mx-auto w-full"><a class="flex items-center gap-2.5 group" href="#"><div class="w-8 h-8 rounded-lg bg-white/15 flex items-center justify-center border border-white/25 text-primary group-hover:scale-105 transition-transform duration-200"><span class="material-symbols-outlined text-lg" data-icon="air">air</span></div><span class="font-headline text-lg font-bold tracking-tight text-white">AirQuality</span></a><div class="relative flex-1 max-w-[420px] hidden md:block"><div class="relative flex items-center w-full rounded-full bg-white/10 border border-white/20 backdrop-blur-xl px-4 py-2 text-white shadow-inner focus-within:border-white/40 focus-within:bg-white/15 transition-all duration-200"><span class="material-symbols-outlined text-white/70 mr-2.5 text-lg" data-icon="search">search</span><input class="w-full bg-transparent border-0 p-0 text-sm font-body text-white placeholder-white/60 focus:ring-0 focus:outline-none" placeholder="Search any city or station" type="text"/><kbd class="hidden sm:inline-flex items-center gap-0.5 px-2 py-0.5 text-[10px] font-label font-medium text-white/75 bg-white/15 rounded-md border border-white/20 ml-2 select-none">⌘K</kbd></div></div><div class="flex items-center gap-2.5"><button class="flex items-center gap-1.5 px-4 py-2 rounded-full bg-white/10 hover:bg-white/20 border border-white/25 text-white text-xs font-semibold tracking-wide transition-all duration-150 active:scale-95 shadow-sm"><span class="material-symbols-outlined text-sm text-primary-fixed" data-icon="near_me">near_me</span><span>Use my location</span></button></div></div></header>
+<!-- MAIN LANDING VIEWPORT (Desktop first 1440x900 viewport target) -->
+<main class="relative z-10 w-full min-h-screen flex flex-col justify-between pt-28 pb-8 px-6 lg:px-12">
+<div class="max-w-[1200px] w-full mx-auto my-auto py-6 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+<!-- LEFT COLUMN: Hero Atmospheric Telemetry (Span 8 cols) -->
+<section class="lg:col-span-8 flex flex-col justify-center text-white space-y-4"><div class="flex items-center gap-3"><div class="glass-pill px-3 py-1 rounded-full inline-flex items-center gap-2 text-xs font-semibold tracking-[0.16em] uppercase text-white/90 font-label"><span class="w-2 h-2 rounded-full bg-[#449A66] shadow-[0_0_8px_#449A66]"></span><span>AIR QUALITY INDEX</span></div></div><div class="flex flex-col sm:flex-row sm:items-baseline gap-2 sm:gap-6 pt-1"><div class="hero-aqi-num font-headline text-[130px] sm:text-[180px] lg:text-[210px] font-extralight text-white leading-none tracking-tighter drop-shadow-md select-none">42</div><div class="flex flex-col pb-4 sm:pb-8"><div class="flex items-center gap-3 mb-1"><span class="relative flex h-3.5 w-3.5"><span class="drift-dot absolute inline-flex h-full w-full rounded-full bg-[#449A66] opacity-75"></span><span class="relative inline-flex rounded-full h-3.5 w-3.5 bg-[#449A66] border border-white/60"></span></span><h1 class="font-headline text-4xl sm:text-5xl font-bold text-white tracking-tight drop-shadow-sm">Good</h1></div><span class="text-xs font-mono uppercase tracking-wider text-white/60 font-semibold">AQI RANGE (0–50)</span></div></div><div class="flex flex-wrap items-center gap-2.5 pt-1"><div class="glass-pill px-3.5 py-1.5 rounded-full flex items-center gap-1.5 text-xs text-white/90 font-medium"><span class="material-symbols-outlined text-sm text-primary-fixed" data-icon="location_on">location_on</span><span>Madrid, Spain · Updated 2 hours ago</span></div><div class="glass-pill px-3.5 py-1.5 rounded-full flex items-center gap-1.5 text-xs text-white/90 font-medium"><span class="material-symbols-outlined text-sm text-[#9BE7C4]" data-icon="grain">grain</span><span>Dominant: PM2.5</span></div></div><div class="pt-3 max-w-xl"><div class="glass-card rounded-2xl p-4 border-l-4 border-l-[#449A66] shadow-lg"><p class="text-base sm:text-lg font-normal text-white/95 leading-relaxed font-body drop-shadow-sm">Air quality is satisfactory, and air pollution poses little or no risk.</p><div class="flex items-center gap-2 pt-2.5 mt-2.5 border-t border-white/10 text-xs sm:text-sm font-medium text-white/80"><span class="material-symbols-outlined text-base text-[#9BE7C4]" data-icon="check_circle">check_circle</span><span>Great day to be outside.</span></div></div></div><div class="pt-4 max-w-md"><div class="w-full h-2 rounded-full bg-black/30 overflow-visible relative flex items-center"><div class="w-full h-1.5 rounded-full grid grid-cols-6 gap-0.5 overflow-hidden"><div class="h-full bg-emerald-400"></div><div class="h-full bg-yellow-400/80"></div><div class="h-full bg-orange-400/70"></div><div class="h-full bg-red-400/60"></div><div class="h-full bg-purple-400/60"></div><div class="h-full bg-rose-900/60"></div></div><div class="absolute left-[14%] w-3.5 h-3.5 rounded-full bg-white border-2 border-[#449A66] shadow-[0_0_8px_#449A66] -translate-x-1/2"></div></div><div class="flex justify-between items-center text-[10px] tracking-wider uppercase font-semibold text-white/60 mt-2"><span>0 Good</span><span>50</span><span>100</span><span>150</span><span>200</span><span>300+</span></div></div></section>
+<!-- RIGHT COLUMN: Telemetry Glass Card "Right now" (Span 4 cols) -->
+<aside class="lg:col-span-4 flex justify-center lg:justify-end"><div class="glass-card w-full max-w-[340px] rounded-3xl p-6 text-white transition-all duration-300 hover:border-white/30"><div class="pb-4 border-b border-white/15"><div class="flex items-center gap-2 mb-1"><span class="relative flex h-2.5 w-2.5"><span class="drift-dot absolute inline-flex h-full w-full rounded-full bg-[#449A66] opacity-75"></span><span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#449A66]"></span></span><h2 class="font-headline text-lg font-semibold text-white tracking-tight">Right now</h2></div><p class="text-xs text-white/60 font-body">Atmospheric multi-sensor telemetry</p></div><div class="grid grid-cols-2 gap-3 pt-5"><div class="flex flex-col p-3.5 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors"><div class="flex items-center gap-1.5 text-white/70 mb-2"><span class="material-symbols-outlined text-base text-primary-fixed" data-icon="thermostat">thermostat</span><span class="text-[11px] uppercase font-semibold tracking-wider">TEMPERATURE</span></div><div class="font-headline text-2xl font-light text-white tracking-tight">12.7 <span class="text-sm font-normal text-white/70">°C</span></div></div><div class="flex flex-col p-3.5 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors"><div class="flex items-center gap-1.5 text-white/70 mb-2"><span class="material-symbols-outlined text-base text-primary-dim" data-icon="water_drop">water_drop</span><span class="text-[11px] uppercase font-semibold tracking-wider">HUMIDITY</span></div><div class="font-headline text-2xl font-light text-white tracking-tight">57 <span class="text-sm font-normal text-white/70">%</span></div></div><div class="flex flex-col p-3.5 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors"><div class="flex items-center gap-1.5 text-white/70 mb-2"><span class="material-symbols-outlined text-base text-primary-fixed" data-icon="air">air</span><span class="text-[11px] uppercase font-semibold tracking-wider">WIND</span></div><div class="font-headline text-2xl font-light text-white tracking-tight">0.2 <span class="text-sm font-normal text-white/70">m/s</span></div></div><div class="flex flex-col p-3.5 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors"><div class="flex items-center gap-1.5 text-white/70 mb-2"><span class="material-symbols-outlined text-base text-[#9BE7C4]" data-icon="speed">speed</span><span class="text-[11px] uppercase font-semibold tracking-wider">PRESSURE</span></div><div class="font-headline text-2xl font-light text-white tracking-tight">1020 <span class="text-sm font-normal text-white/70">hPa</span></div></div></div></div></aside>
+</div>
+<!-- BOTTOM CENTER SCROLL CUE -->
+<div class="w-full flex justify-center items-center py-2">
+<a class="group flex flex-col items-center gap-1.5 text-white/75 hover:text-white transition-colors duration-200 cursor-pointer" href="#details">
+<span class="text-xs font-label uppercase tracking-widest text-white/80 group-hover:text-white transition-colors">
+          Forecast, pollutants &amp; map
+        </span>
+<div class="w-7 h-7 rounded-full bg-white/10 border border-white/20 flex items-center justify-center float-scroll group-hover:bg-white/20 transition-all">
+<span class="material-symbols-outlined text-lg text-white" data-icon="keyboard_arrow_down">keyboard_arrow_down</span>
+</div>
+</a>
+</div>
+</main>
+<!-- FOOTER (Shared Component Anchor) -->
+<!-- Micro Interaction Handler -->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Subtle counter micro-interaction for the hero AQI numeral
+      const numeral = document.querySelector('.hero-aqi-num');
+      if (numeral && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        let current = 0;
+        const target = 42;
+        const duration = 1100;
+        const stepTime = Math.abs(Math.floor(duration / target));
+        
+        const timer = setInterval(() => {
+          current += 1;
+          numeral.textContent = current;
+          if (current >= target) {
+            clearInterval(timer);
+            numeral.textContent = target;
+          }
+        }, stepTime);
+      }
+    });
+  </script>
+</body></html>

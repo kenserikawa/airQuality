@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AirQuality — Unhealthy AQI Hero</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Sora', 'sans-serif'],
+          },
+          colors: {
+            aqi: {
+              burgundy: '#3D0E12',
+              deepred: '#C0392B',
+              coral: '#F28B82',
+              danger: '#EF4444',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      font-family: 'Sora', sans-serif;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+      background: #3D0E12;
+      color: #FFFFFF;
+      user-select: none;
+    }
+
+    /* Living smog atmosphere gradient */
+    .smog-atmosphere {
+      background: radial-gradient(120% 90% at 50% 10%, #52151A 0%, #3D0E12 35%, #8B262A 68%, #C0392B 84%, #F28B82 100%);
+      position: relative;
+      min-height: 100vh;
+      width: 100%;
+      overflow: hidden;
+    }
+
+    /* Atmospheric heavy particulate haze and smoke layers */
+    .haze-layer-1 {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 65% 75%, rgba(242, 139, 130, 0.28) 0%, transparent 60%),
+                  radial-gradient(circle at 20% 85%, rgba(192, 57, 43, 0.35) 0%, transparent 55%),
+                  radial-gradient(circle at 80% 30%, rgba(61, 14, 18, 0.6) 0%, transparent 50%);
+      filter: blur(40px);
+      pointer-events: none;
+    }
+
+    .haze-noise-overlay {
+      position: absolute;
+      inset: 0;
+      opacity: 0.16;
+      background-image: radial-gradient(#F28B82 1px, transparent 1px);
+      background-size: 28px 28px;
+      pointer-events: none;
+      animation: driftDrift 30s linear infinite;
+    }
+
+    @keyframes driftDrift {
+      0% { transform: translateY(0) translateX(0); }
+      50% { transform: translateY(-14px) translateX(10px); }
+      100% { transform: translateY(0) translateX(0); }
+    }
+
+    /* Particle canvas simulation */
+    canvas#smogParticles {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* Glassmorphism styling matching AirQuality standard */
+    .glass-capsule {
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      box-shadow: 0 16px 36px -8px rgba(30, 6, 8, 0.45);
+    }
+
+    .glass-card {
+      background: rgba(45, 12, 16, 0.48);
+      backdrop-filter: blur(28px);
+      -webkit-backdrop-filter: blur(28px);
+      border: 1px solid rgba(242, 139, 130, 0.18);
+      box-shadow: 0 24px 48px -12px rgba(25, 4, 7, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.04) inset;
+    }
+
+    .glass-pill {
+      background: rgba(255, 255, 255, 0.07);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .glass-pill:hover {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(255, 255, 255, 0.22);
+    }
+
+    .chevron-float {
+      animation: gentleBob 2.6s ease-in-out infinite;
+    }
+
+    @keyframes gentleBob {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(5px); }
+    }
+
+    .metric-subcard {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 1rem;
+      transition: all 0.2s ease;
+    }
+    .metric-subcard:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(242, 139, 130, 0.28);
+    }
+
+    .pulse-danger {
+      animation: pulseDanger 2.2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+    @keyframes pulseDanger {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.55; transform: scale(1.15); }
+    }
+  </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col justify-between selection:bg-rose-500 selection:text-white">
+
+  <!-- Full-Bleed Smog Sky Viewport -->
+  <div class="smog-atmosphere flex flex-col justify-between min-h-screen relative p-6 md:p-10 z-0">
+    <!-- Atmospheric Ambient Layers -->
+    <div class="haze-layer-1"></div>
+    <div class="haze-noise-overlay"></div>
+    <canvas id="smogParticles"></canvas>
+
+    <!-- Top Bar Header (NO navigation menu, NO tabs) -->
+    <header class="relative z-10 w-full max-w-7xl mx-auto flex items-center justify-between gap-4 py-2">
+      <!-- Left: AirQuality wordmark -->
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-xl bg-white/10 backdrop-blur-md border border-white/15 flex items-center justify-center shadow-lg">
+          <span class="material-symbols-outlined text-rose-300 text-xl">air</span>
+        </div>
+        <span class="text-xl md:text-2xl font-bold tracking-tight text-white font-sans flex items-center gap-1.5">
+          AirQuality
+        </span>
+      </div>
+
+      <!-- Center: Frosted-glass rounded search capsule -->
+      <div class="glass-capsule rounded-full px-5 py-3 w-full max-w-md hidden md:flex items-center gap-3 text-white/70 shadow-xl transition-all focus-within:border-white/30 focus-within:bg-white/12">
+        <span class="material-symbols-outlined text-white/50 text-xl">search</span>
+        <input 
+          type="text" 
+          placeholder="Search any city or station" 
+          readonly 
+          class="bg-transparent border-none outline-none text-sm text-white placeholder-white/50 w-full font-light tracking-wide cursor-pointer"
+          value="Search any city or station"
+        />
+        <div class="flex items-center gap-1 text-[11px] font-mono bg-white/10 px-2 py-0.5 rounded-md text-white/60 border border-white/10">
+          <span>⌘K</span>
+        </div>
+      </div>
+
+      <!-- Right: Glass pill "Use my location" -->
+      <div class="flex items-center gap-3">
+        <button class="glass-pill rounded-full px-5 py-2.5 text-xs md:text-sm font-medium text-white flex items-center gap-2 transition-all shadow-md active:scale-98">
+          <span class="material-symbols-outlined text-rose-300 text-base">near_me</span>
+          <span>Use my location</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Hero Body Grid (Left Hero Info + Right "Right now" Card) -->
+    <main class="relative z-10 w-full max-w-7xl mx-auto my-auto py-8 md:py-12 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
+      
+      <!-- Left Column: Primary AQI & Unhealthy Status (Hero metrics) -->
+      <div class="lg:col-span-7 flex flex-col justify-center space-y-6">
+        
+        <!-- Live Pill & Category badge -->
+        <div class="flex items-center gap-3 flex-wrap">
+          <div class="glass-pill px-3.5 py-1.5 rounded-full flex items-center gap-2 text-xs font-semibold tracking-wider uppercase text-white/90">
+            <span class="w-2 h-2 rounded-full bg-rose-500 pulse-danger"></span>
+            <span>Air Quality Index</span>
+          </div>
+          <div class="glass-pill px-3 py-1.5 rounded-full flex items-center gap-2 text-xs text-rose-200/80 font-medium">
+            <span class="material-symbols-outlined text-sm text-rose-300">sensors</span>
+            <span>Live Telemetry</span>
+          </div>
+        </div>
+
+        <!-- Giant AQI Number & State -->
+        <div class="flex flex-col sm:flex-row sm:items-baseline gap-3 sm:gap-6 pt-1">
+          <div class="text-[7.5rem] sm:text-[9.5rem] lg:text-[10.5rem] font-extralight tracking-tighter leading-none text-white font-sans drop-shadow-[0_12px_24px_rgba(0,0,0,0.5)]">
+            168
+          </div>
+          <div class="flex flex-col justify-center pb-2 sm:pb-6">
+            <div class="flex items-center gap-3">
+              <span class="w-3.5 h-3.5 rounded-full bg-rose-500 shadow-[0_0_14px_#EF4444] inline-block"></span>
+              <span class="text-4xl sm:text-5xl font-bold tracking-tight text-white">Unhealthy</span>
+            </div>
+            <span class="text-xs sm:text-sm font-medium tracking-widest text-rose-200/70 uppercase mt-2">
+              AQI Range (151 – 200)
+            </span>
+          </div>
+        </div>
+
+        <!-- Location Metadata & Chips -->
+        <div class="flex items-center gap-2.5 flex-wrap pt-1 text-sm text-white/85">
+          <div class="glass-pill px-4 py-2 rounded-full flex items-center gap-2">
+            <span class="material-symbols-outlined text-rose-300 text-base">location_on</span>
+            <span class="font-medium text-white">New Delhi, India</span>
+            <span class="text-white/40">·</span>
+            <span class="text-white/70 font-light">Updated 1 hour ago</span>
+          </div>
+
+          <div class="glass-pill px-4 py-2 rounded-full flex items-center gap-2 text-rose-200">
+            <span class="material-symbols-outlined text-rose-300 text-base">blur_on</span>
+            <span class="font-medium">Dominant: PM2.5</span>
+          </div>
+
+          <div class="glass-pill px-3.5 py-2 rounded-full flex items-center gap-2 text-white/70 text-xs">
+            <span class="material-symbols-outlined text-white/50 text-sm">shield</span>
+            <span>US EPA Standard</span>
+          </div>
+        </div>
+
+        <!-- Health Message Card -->
+        <div class="glass-card rounded-2xl p-5 md:p-6 space-y-4 max-w-2xl border-l-4 border-l-rose-500">
+          <p class="text-base md:text-lg text-white/95 font-normal leading-relaxed">
+            Everyone may begin to experience health effects; sensitive groups may experience more serious effects.
+          </p>
+          
+          <div class="pt-3 border-t border-white/10 flex items-start gap-3 text-sm md:text-base text-rose-100 font-medium">
+            <div class="w-7 h-7 rounded-lg bg-rose-500/20 border border-rose-500/30 flex items-center justify-center shrink-0 mt-0.5">
+              <span class="material-symbols-outlined text-rose-400 text-lg">warning</span>
+            </div>
+            <p class="leading-snug pt-0.5">
+              Avoid prolonged outdoor exertion. Consider a mask outdoors.
+            </p>
+          </div>
+        </div>
+
+        <!-- AQI Multi-gradient Bar Indicator -->
+        <div class="pt-2 max-w-xl">
+          <div class="flex justify-between text-[11px] font-medium tracking-wide text-white/70 mb-2">
+            <span>Good (0-50)</span>
+            <span>Moderate (51-100)</span>
+            <span class="text-rose-300 font-bold underline decoration-rose-400 decoration-2 underline-offset-4">Unhealthy (151-200)</span>
+            <span>Hazardous (300+)</span>
+          </div>
+          <div class="w-full h-2 rounded-full bg-black/40 backdrop-blur-sm p-0.5 relative overflow-hidden flex">
+            <div class="h-full w-[17%] bg-emerald-400/80 rounded-l-full"></div>
+            <div class="h-full w-[17%] bg-amber-400/80"></div>
+            <div class="h-full w-[16%] bg-orange-500/80"></div>
+            <div class="h-full w-[25%] bg-rose-600 relative">
+              <!-- Active marker -->
+              <div class="absolute right-3 -top-1 w-3.5 h-3.5 bg-white rounded-full shadow-[0_0_8px_#ffffff] border-2 border-rose-600"></div>
+            </div>
+            <div class="h-full w-[15%] bg-purple-600/80"></div>
+            <div class="h-full w-[10%] bg-red-950 rounded-r-full"></div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Right Column: "Right now" Frosted-glass Telemetry Card -->
+      <div class="lg:col-span-5 flex justify-center lg:justify-end">
+        <div class="glass-card rounded-3xl p-6 md:p-8 w-full max-w-md shadow-2xl relative">
+          
+          <!-- Card Header -->
+          <div class="flex items-center justify-between pb-6 border-b border-white/10">
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-rose-300 text-xl">sensors</span>
+                <h2 class="text-xl md:text-2xl font-bold tracking-tight text-white">Right now</h2>
+              </div>
+              <p class="text-xs text-rose-200/70 font-light mt-0.5">Atmospheric multi-sensor telemetry</p>
+            </div>
+            <div class="glass-pill px-3 py-1 rounded-full text-[11px] font-semibold tracking-wide uppercase text-rose-300 flex items-center gap-1.5">
+              <span class="w-1.5 h-1.5 rounded-full bg-rose-400 animate-ping"></span>
+              Live Feed
+            </div>
+          </div>
+
+          <!-- 2x2 Sensor Metrics Grid -->
+          <div class="grid grid-cols-2 gap-3.5 py-6">
+            
+            <!-- Temperature: 31 °C -->
+            <div class="metric-subcard p-4 flex flex-col justify-between">
+              <div class="flex items-center justify-between text-white/60 mb-2">
+                <span class="text-xs font-medium tracking-wide uppercase">Temperature</span>
+                <span class="material-symbols-outlined text-rose-300 text-lg">thermostat</span>
+              </div>
+              <div>
+                <div class="text-3xl md:text-4xl font-semibold text-white tracking-tight">31 <span class="text-xl font-light text-rose-200">°C</span></div>
+                <div class="text-[11px] text-white/50 font-light mt-1">Heat index 34°C</div>
+              </div>
+            </div>
+
+            <!-- Humidity: 48% -->
+            <div class="metric-subcard p-4 flex flex-col justify-between">
+              <div class="flex items-center justify-between text-white/60 mb-2">
+                <span class="text-xs font-medium tracking-wide uppercase">Humidity</span>
+                <span class="material-symbols-outlined text-rose-300 text-lg">water_drop</span>
+              </div>
+              <div>
+                <div class="text-3xl md:text-4xl font-semibold text-white tracking-tight">48<span class="text-xl font-light text-rose-200">%</span></div>
+                <div class="text-[11px] text-white/50 font-light mt-1">Dew point 19°C</div>
+              </div>
+            </div>
+
+            <!-- Wind: 1.8 m/s -->
+            <div class="metric-subcard p-4 flex flex-col justify-between">
+              <div class="flex items-center justify-between text-white/60 mb-2">
+                <span class="text-xs font-medium tracking-wide uppercase">Wind</span>
+                <span class="material-symbols-outlined text-rose-300 text-lg">air</span>
+              </div>
+              <div>
+                <div class="text-3xl md:text-4xl font-semibold text-white tracking-tight">1.8 <span class="text-base font-light text-rose-200">m/s</span></div>
+                <div class="text-[11px] text-white/50 font-light mt-1">NNW · Stagnant basin</div>
+              </div>
+            </div>
+
+            <!-- PM2.5: 168 -->
+            <div class="metric-subcard p-4 flex flex-col justify-between bg-rose-950/30 border-rose-500/30">
+              <div class="flex items-center justify-between text-rose-300 mb-2">
+                <span class="text-xs font-bold tracking-wide uppercase">PM2.5</span>
+                <span class="material-symbols-outlined text-rose-400 text-lg">scatter_plot</span>
+              </div>
+              <div>
+                <div class="text-3xl md:text-4xl font-bold text-white tracking-tight">168 <span class="text-xs font-normal text-rose-300/80">µg/m³</span></div>
+                <div class="text-[11px] text-rose-300/90 font-medium mt-1">33.6× WHO annual guide</div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Stability Trendline Mini-Graphic -->
+          <div class="pt-2 border-t border-white/10">
+            <div class="flex items-center justify-between text-xs text-white/60 mb-2 font-light">
+              <span>6-Hour Atmospheric Trend</span>
+              <span class="text-rose-300 font-medium">Accumulating Smog ↑</span>
+            </div>
+            <!-- Trend SVG -->
+            <div class="h-14 w-full bg-black/20 rounded-xl p-2 flex items-end">
+              <svg class="w-full h-full overflow-visible" viewBox="0 0 300 45" fill="none" preserveAspectRatio="none">
+                <defs>
+                  <linearGradient id="trendGradient" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#F28B82" stop-opacity="0.45"/>
+                    <stop offset="100%" stop-color="#C0392B" stop-opacity="0.0"/>
+                  </linearGradient>
+                </defs>
+                <path d="M0,38 C40,36 70,30 110,28 C150,26 190,16 230,12 C260,8 280,5 300,4 L300,45 L0,45 Z" fill="url(#trendGradient)"/>
+                <path d="M0,38 C40,36 70,30 110,28 C150,26 190,16 230,12 C260,8 280,5 300,4" stroke="#F28B82" stroke-width="2.5" stroke-linecap="round"/>
+                <circle cx="300" cy="4" r="4" fill="#FFFFFF" class="shadow-sm"/>
+              </svg>
+            </div>
+            <div class="flex justify-between text-[10px] text-white/40 font-mono mt-1 px-1">
+              <span>08:00 (135)</span>
+              <span>10:00 (148)</span>
+              <span>12:00 (160)</span>
+              <span class="text-rose-300 font-semibold">Now (168)</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </main>
+
+    <!-- Bottom Center: Scroll Hint (NO footer links) -->
+    <footer class="relative z-10 w-full flex flex-col items-center justify-center pb-2 pt-4">
+      <button class="group flex flex-col items-center gap-1.5 text-white/80 hover:text-white transition-all cursor-pointer">
+        <span class="text-xs md:text-sm font-medium tracking-wider capitalize text-white/90 group-hover:text-white">
+          Forecast, pollutants &amp; map
+        </span>
+        <div class="w-8 h-8 rounded-full glass-pill flex items-center justify-center chevron-float border border-white/20 group-hover:border-white/40">
+          <span class="material-symbols-outlined text-white text-base">expand_more</span>
+        </div>
+      </button>
+    </footer>
+
+  </div>
+
+  <!-- Smog Particulate Canvas Engine -->
+  <script>
+    (function initParticulates() {
+      const canvas = document.getElementById('smogParticles');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      let width, height;
+      let particles = [];
+      const PARTICLE_COUNT = 85;
+
+      function resize() {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+      }
+
+      window.addEventListener('resize', resize);
+      resize();
+
+      class HazeParticle {
+        constructor() {
+          this.reset(true);
+        }
+
+        reset(initial = false) {
+          this.x = Math.random() * width;
+          this.y = initial ? Math.random() * height : height + 10;
+          // Heavier, larger particulate matter (smog PM10 & PM2.5 clusters)
+          this.radius = Math.random() * 3.8 + 1.2;
+          this.speedY = -(Math.random() * 0.25 + 0.15); // slow drifting upward haze
+          this.speedX = (Math.random() - 0.5) * 0.35;   // sluggish lateral drift
+          this.baseAlpha = Math.random() * 0.38 + 0.15;
+          this.alpha = this.baseAlpha;
+          // Color ranges between deep amber, dirty coral, and warm haze
+          const colors = [
+            'rgba(242, 139, 130,', // coral haze
+            'rgba(255, 179, 173,', // light suspended ash
+            'rgba(192, 57, 43,',   // reddish particulate
+            'rgba(235, 150, 142,'  // smoky mineral
+          ];
+          this.colorPrefix = colors[Math.floor(Math.random() * colors.length)];
+        }
+
+        update() {
+          this.y += this.speedY;
+          this.x += this.speedX;
+
+          // Gentle oscillation
+          this.x += Math.sin(this.y * 0.01) * 0.2;
+
+          if (this.y < -20 || this.x < -20 || this.x > width + 20) {
+            this.reset(false);
+          }
+        }
+
+        draw() {
+          ctx.beginPath();
+          const gradient = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.radius);
+          gradient.addColorStop(0, this.colorPrefix + this.alpha + ')');
+          gradient.addColorStop(0.7, this.colorPrefix + (this.alpha * 0.5) + ')');
+          gradient.addColorStop(1, this.colorPrefix + '0)');
+          
+          ctx.fillStyle = gradient;
+          ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+
+      for (let i = 0; i < PARTICLE_COUNT; i++) {
+        particles.push(new HazeParticle());
+      }
+
+      function animate() {
+        ctx.clearRect(0, 0, width, height);
+        particles.forEach(p => {
+          p.update();
+          p.draw();
+        });
+        requestAnimationFrame(animate);
+      }
+
+      animate();
+    })();
+  </script>
+</body>
+</html>

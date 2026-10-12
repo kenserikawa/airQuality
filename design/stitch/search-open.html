@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>AirQuality — Real-Time Atmosphere</title>
+<!-- Google Fonts: Sora & Manrope -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&amp;family=Sora:wght@100;200;300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS v3 -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface-tint": "#e5fff7",
+            "inverse-primary": "#066b5d",
+            "inverse-surface": "#faf8ff",
+            "error": "#ff716c",
+            "secondary-fixed-dim": "#efd7b3",
+            "primary-fixed": "#9aecd9",
+            "surface-dim": "#060e20",
+            "surface": "#060e20",
+            "on-primary-container": "#006254",
+            "on-primary": "#066b5d",
+            "on-error-container": "#ff9993",
+            "outline-variant": "#38476d",
+            "surface-bright": "#172b54",
+            "inverse-on-surface": "#4d556b",
+            "tertiary": "#ffcc83",
+            "surface-container-low": "#081329",
+            "tertiary-dim": "#efac3f",
+            "primary-fixed-dim": "#8cdecb",
+            "background": "#060e20",
+            "on-primary-fixed": "#00443a",
+            "surface-container-highest": "#142449",
+            "surface-container-lowest": "#000000",
+            "secondary": "#dac3a1",
+            "on-background": "#dee5ff",
+            "on-surface": "#dee5ff",
+            "secondary-dim": "#ccb694",
+            "primary": "#e5fff7",
+            "on-tertiary-container": "#593a00",
+            "on-surface-variant": "#9baad6",
+            "surface-container-high": "#101e3e",
+            "surface-variant": "#142449",
+            "error-container": "#8a1a1e",
+            "tertiary-container": "#ffba4b",
+            "primary-dim": "#8cdecb",
+            "on-primary-fixed-variant": "#006456",
+            "tertiary-fixed-dim": "#efac3f",
+            "outline": "#65759e",
+            "on-secondary-fixed": "#504026",
+            "on-secondary-fixed-variant": "#6e5d40",
+            "on-error": "#490006",
+            "on-tertiary-fixed-variant": "#654200",
+            "primary-container": "#a8fbe7",
+            "on-tertiary-fixed": "#3f2700",
+            "secondary-container": "#31240c",
+            "surface-container": "#0c1934",
+            "secondary-fixed": "#fde5c0",
+            "tertiary-fixed": "#ffba4b",
+            "on-secondary-container": "#b6a180",
+            "on-secondary": "#4d3e24",
+            "error-dim": "#c94947",
+            "on-tertiary": "#654200"
+          },
+          borderRadius: {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          fontFamily: {
+            headline: ["Sora", "sans-serif"],
+            display: ["Sora", "sans-serif"],
+            body: ["Manrope", "sans-serif"],
+            label: ["Manrope", "sans-serif"]
+          }
+        }
+      }
+    };
+  </script>
+<style>
+    /* Sky Gradient: Moderate (3B3A1E -> C9A227 -> F6E7A1) */
+    .sky-moderate-bg {
+      background: linear-gradient(180deg, #3B3A1E 0%, #765C1E 28%, #C9A227 65%, #F6E7A1 100%);
+    }
+
+    /* Ambient drifting particles */
+    .particle {
+      position: absolute;
+      border-radius: 9999px;
+      pointer-events: none;
+      background: radial-gradient(circle, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 70%);
+      animation: floatSlow linear infinite;
+    }
+
+    @keyframes floatSlow {
+      0% {
+        transform: translateY(105vh) translateX(0px) scale(0.9);
+        opacity: 0;
+      }
+      15% {
+        opacity: 0.65;
+      }
+      85% {
+        opacity: 0.55;
+      }
+      100% {
+        transform: translateY(-10vh) translateX(60px) scale(1.15);
+        opacity: 0;
+      }
+    }
+
+    /* Blinking text cursor */
+    @keyframes blinkPipe {
+      0%, 49% { opacity: 1; }
+      50%, 100% { opacity: 0; }
+    }
+    .blinking-cursor {
+      animation: blinkPipe 1s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+
+    /* Glass card primitives */
+    .glass-frosted {
+      background: rgba(15, 12, 5, 0.45);
+      backdrop-filter: blur(28px);
+      -webkit-backdrop-filter: blur(28px);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.16);
+    }
+  </style>
+</head>
+<body class="min-h-screen w-full overflow-x-hidden font-body text-white antialiased sky-moderate-bg relative selection:bg-tertiary-container selection:text-surface-container-lowest">
+<!-- ============================================================== -->
+<!-- AMBIENT PARTICLES (Haze / PM2.5 Micro-Atmosphere)              -->
+<!-- ============================================================== -->
+<div aria-hidden="true" class="fixed inset-0 overflow-hidden pointer-events-none z-0">
+<div class="particle w-3 h-3 left-[12%]" style="animation-duration: 22s; animation-delay: -2s;"></div>
+<div class="particle w-2 h-2 left-[28%]" style="animation-duration: 27s; animation-delay: -8s;"></div>
+<div class="particle w-4 h-4 left-[42%]" style="animation-duration: 34s; animation-delay: -14s;"></div>
+<div class="particle w-2.5 h-2.5 left-[64%]" style="animation-duration: 24s; animation-delay: -5s;"></div>
+<div class="particle w-3.5 h-3.5 left-[78%]" style="animation-duration: 30s; animation-delay: -19s;"></div>
+<div class="particle w-2 h-2 left-[88%]" style="animation-duration: 21s; animation-delay: -11s;"></div>
+<div class="particle w-1.5 h-1.5 left-[50%]" style="animation-duration: 38s; animation-delay: -1s;"></div>
+</div>
+<!-- ============================================================== -->
+<!-- TOP CENTER SEARCH CAPSULE & OPEN DROPDOWN (FOREGROUND FOCUS)   -->
+<!-- ============================================================== -->
+<header class="relative z-50 pt-8 pb-4 flex flex-col items-center px-4 w-full max-w-7xl mx-auto"><div class="w-full flex items-center justify-between gap-4 mb-4"><div class="flex items-center gap-2.5 shrink-0"><div class="w-9 h-9 rounded-xl bg-white/10 backdrop-blur-md border border-white/15 flex items-center justify-center text-white shadow-sm"><span class="material-symbols-outlined text-xl" data-icon="air">air</span></div><span class="font-headline font-bold text-xl tracking-tight text-white drop-shadow-sm">AirQuality</span></div><div class="flex-1 max-w-[580px] relative"><div class="w-full h-14 rounded-full px-5 flex items-center gap-3.5 bg-black/45 backdrop-blur-2xl border border-tertiary-dim/70 shadow-[0_0_24px_rgba(201,162,39,0.35)] ring-2 ring-tertiary-container/40 transition-all duration-300"><span class="material-symbols-outlined text-white/90 text-2xl" data-icon="search">search</span><div class="flex-1 flex items-center text-lg font-headline font-medium text-white tracking-wide"><span>madr</span><span class="w-[2px] h-6 bg-tertiary-container ml-0.5 rounded-full blinking-cursor"></span></div><div class="flex items-center gap-2"><kbd class="hidden sm:inline-flex items-center px-2 py-0.5 text-[11px] font-label font-bold uppercase tracking-wider text-white/70 bg-white/10 rounded-md border border-white/20 shadow-inner">ESC</kbd><button aria-label="Clear query" class="w-7 h-7 rounded-full flex items-center justify-center hover:bg-white/20 text-white/70 hover:text-white transition-colors" type="button"><span class="material-symbols-outlined text-base" data-icon="close">close</span></button></div></div><div class="absolute left-0 right-0 top-full mt-2.5 w-full rounded-3xl glass-frosted border border-white/20 p-2.5 shadow-[0_30px_70px_rgba(0,0,0,0.65)] overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200 z-50"><button class="w-full px-3.5 py-3 rounded-2xl flex items-center justify-between text-left hover:bg-white/10 transition-colors group" type="button"><div class="flex items-center gap-3"><div class="w-9 h-9 rounded-full bg-tertiary-container/20 border border-tertiary-container/30 flex items-center justify-center text-tertiary-container group-hover:scale-105 transition-transform"><span class="material-symbols-outlined text-xl" data-icon="near_me">near_me</span></div><div><p class="font-headline font-medium text-sm text-white group-hover:text-tertiary transition-colors">Use my current location</p><p class="font-body text-xs text-white/60">Find the nearest station</p></div></div><span class="text-xs font-label uppercase tracking-widest text-tertiary-container/90 font-semibold px-2 py-0.5 rounded bg-tertiary-container/10 border border-tertiary-container/25">Near you</span></button><div class="border-t border-white/10 my-2 mx-1"></div><div class="px-3.5 py-1.5 flex items-center justify-between text-[11px] font-label uppercase tracking-wider text-white/50 font-semibold"><span>Matching Stations (5)</span><span>AQI Index</span></div><div class="flex flex-col gap-1 mt-1"><div class="w-full px-3 py-2.5 rounded-2xl flex items-center justify-between hover:bg-white/10 transition-all cursor-pointer group"><div class="flex items-center gap-3 min-w-0"><div class="w-10 h-7 rounded-lg bg-amber-500/20 text-amber-300 border border-amber-500/30 flex items-center justify-center font-headline font-bold text-xs tracking-tight shadow-sm shrink-0">59</div><div class="truncate"><span class="font-headline font-semibold text-sm text-white group-hover:text-tertiary-fixed transition-colors">Cuatro Caminos</span><span class="text-white/40 mx-1.5">·</span><span class="text-white/60 text-sm">Madrid, Spain</span></div></div><span class="text-xs font-label text-amber-300/80 font-medium shrink-0 ml-2">Moderate</span></div><div class="w-full px-3 py-2.5 rounded-2xl flex items-center justify-between bg-white/20 border border-white/30 shadow-lg shadow-black/20 cursor-pointer ring-1 ring-white/25"><div class="flex items-center gap-3 min-w-0"><div class="w-10 h-7 rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 flex items-center justify-center font-headline font-bold text-xs tracking-tight shadow-sm shrink-0">50</div><div class="truncate"><span class="font-headline font-bold text-sm text-white">Escuelas Aguirre</span><span class="text-white/40 mx-1.5">·</span><span class="text-white/70 text-sm font-medium">Madrid, Spain</span></div></div><div class="flex items-center gap-2 shrink-0 ml-2"><span class="text-xs font-label text-emerald-300 font-semibold">Good</span><span class="material-symbols-outlined text-white/80 text-sm" data-icon="keyboard_return">keyboard_return</span></div></div><div class="w-full px-3 py-2.5 rounded-2xl flex items-center justify-between hover:bg-white/10 transition-all cursor-pointer group"><div class="flex items-center gap-3 min-w-0"><div class="w-10 h-7 rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 flex items-center justify-center font-headline font-semibold text-xs tracking-tight shadow-sm shrink-0">42</div><div class="truncate"><span class="font-headline font-medium text-sm text-white group-hover:text-tertiary-fixed transition-colors">Madrid</span><span class="text-white/40 mx-1.5">·</span><span class="text-white/60 text-sm">Spain</span></div></div><span class="text-xs font-label text-emerald-300/80 font-medium shrink-0 ml-2">Good</span></div><div class="w-full px-3 py-2.5 rounded-2xl flex items-center justify-between hover:bg-white/10 transition-all cursor-pointer group"><div class="flex items-center gap-3 min-w-0"><div class="w-10 h-7 rounded-lg bg-white/10 text-white/50 border border-white/15 flex items-center justify-center font-headline font-semibold text-xs shrink-0">–</div><div class="truncate"><span class="font-headline font-medium text-sm text-white/75 group-hover:text-white transition-colors">Retiro</span><span class="text-white/40 mx-1.5">·</span><span class="text-white/50 text-sm">Madrid, Spain (no data)</span></div></div><span class="text-xs font-label text-white/40 italic shrink-0 ml-2">Offline</span></div><div class="w-full px-3 py-2.5 rounded-2xl flex items-center justify-between hover:bg-white/10 transition-all cursor-pointer group"><div class="flex items-center gap-3 min-w-0"><div class="w-10 h-7 rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 flex items-center justify-center font-headline font-semibold text-xs tracking-tight shrink-0">11</div><div class="truncate"><span class="font-headline font-medium text-sm text-white group-hover:text-tertiary-fixed transition-colors">Madras</span><span class="text-white/40 mx-1.5">·</span><span class="text-white/60 text-sm">Oregon, USA</span></div></div><span class="text-xs font-label text-emerald-300/80 font-medium shrink-0 ml-2">Good</span></div></div><div class="mt-3 pt-2.5 border-t border-white/10 px-3 flex items-center justify-between text-[11px] font-label text-white/50"><div class="flex items-center gap-2"><span class="inline-flex items-center gap-1"><kbd class="px-1.5 py-0.5 rounded bg-white/10 border border-white/20 text-[10px]">↑</kbd><kbd class="px-1.5 py-0.5 rounded bg-white/10 border border-white/20 text-[10px]">↓</kbd><span class="ml-1 text-white/60">navigate</span></span><span class="text-white/20">•</span><span class="inline-flex items-center gap-1"><kbd class="px-1.5 py-0.5 rounded bg-white/10 border border-white/20 text-[10px]">Enter</kbd><span class="ml-1 text-white/60">select</span></span></div><span class="inline-flex items-center gap-1"><kbd class="px-1.5 py-0.5 rounded bg-white/10 border border-white/20 text-[10px]">Esc</kbd><span class="ml-1 text-white/60">close</span></span></div></div></div><div class="shrink-0 hidden md:flex items-center"><button class="h-11 px-4 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 flex items-center gap-2 text-white font-medium text-sm transition-colors shadow-sm" type="button"><span class="material-symbols-outlined text-lg" data-icon="near_me">near_me</span><span>Use my location</span></button></div></div></header>
+<!-- ============================================================== -->
+<!-- HERO CONTENT (BACKGROUND LAYER: DIMMED & SOFTLY BLURRED)       -->
+<!-- ============================================================== -->
+<main class="relative z-10 w-full max-w-6xl mx-auto px-6 pt-4 pb-20 pointer-events-none opacity-60 backdrop-blur-sm select-none transition-all duration-300"><div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-start pt-6 max-w-6xl mx-auto"><div class="md:col-span-7 flex flex-col"><div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-black/25 backdrop-blur-md border border-white/15 text-white/80 font-label uppercase text-xs tracking-[0.2em] w-fit mb-3"><span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>AIR QUALITY INDEX</div><div class="flex items-baseline gap-4 -my-3"><div class="font-headline font-extralight tracking-tighter text-[130px] md:text-[170px] leading-none text-white drop-shadow-[0_20px_40px_rgba(0,0,0,0.35)]">64</div><div class="flex flex-col gap-1"><div class="flex items-center gap-2.5"><span class="w-3.5 h-3.5 rounded-full bg-[#E2B33C] shadow-[0_0_16px_rgba(226,179,60,0.9)]"></span><span class="font-headline font-semibold text-2xl md:text-3xl text-white tracking-tight drop-shadow-md">Moderate</span></div><span class="font-label text-xs uppercase tracking-widest text-white/60 font-medium">AQI RANGE (51–100)</span></div></div><div class="flex flex-wrap items-center gap-2 mt-4 mb-5"><div class="px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/15 text-white/90 text-sm font-medium flex items-center gap-1.5"><span class="material-symbols-outlined text-base text-white/70" data-icon="location_on">location_on</span><span>Barcelona, Spain · Updated 1 hour ago</span></div><div class="px-3 py-1.5 rounded-full bg-amber-500/20 border border-amber-400/30 text-amber-300 text-xs font-semibold uppercase tracking-wider font-label">Dominant: PM2.5</div></div><div class="rounded-2xl glass-frosted border border-white/20 p-4 max-w-xl"><p class="text-sm text-white/90 leading-relaxed font-body">Air quality is acceptable. However, there may be a risk for some people, particularly those unusually sensitive to air pollution.</p><p class="text-xs text-white/60 mt-2 font-body">Unusually sensitive people should consider reducing prolonged outdoor exertion.</p></div><div class="mt-5 max-w-xl flex flex-col gap-2"><div class="flex items-center justify-between font-label text-[11px] uppercase tracking-wider text-white/70"><span>Scale Range (0–500)</span><span class="text-amber-300 font-semibold">Moderate (64)</span></div><div class="h-2 w-full rounded-full bg-white/20 flex overflow-hidden p-0.5 gap-1"><div class="h-full rounded-full bg-[#449A66] flex-1 opacity-50"></div><div class="h-full rounded-full bg-[#E2B33C] flex-1 ring-1 ring-white shadow-sm"></div><div class="h-full rounded-full bg-[#F99932] flex-1 opacity-40"></div><div class="h-full rounded-full bg-[#CE3B34] flex-1 opacity-40"></div><div class="h-full rounded-full bg-[#6A4299] flex-1 opacity-40"></div><div class="h-full rounded-full bg-[#7F2223] flex-1 opacity-40"></div></div></div></div><div class="md:col-span-5 flex flex-col gap-4"><div class="rounded-3xl glass-frosted border border-white/20 p-6 flex flex-col gap-5"><div class="flex items-center justify-between pb-2 border-b border-white/10"><span class="font-headline font-semibold text-base text-white tracking-wide">Right now</span><span class="text-xs font-label uppercase tracking-wider text-white/50">Station Sensor Data</span></div><div class="grid grid-cols-2 gap-4"><div class="p-3.5 rounded-2xl bg-white/5 border border-white/10 flex flex-col"><span class="text-xs font-label uppercase tracking-wider text-white/50 mb-1">Temperature</span><div class="flex items-baseline gap-1 mt-auto"><span class="font-headline font-semibold text-2xl text-white">19</span><span class="text-sm font-label text-white/70">°C</span></div></div><div class="p-3.5 rounded-2xl bg-white/5 border border-white/10 flex flex-col"><span class="text-xs font-label uppercase tracking-wider text-white/50 mb-1">Humidity</span><div class="flex items-baseline gap-1 mt-auto"><span class="font-headline font-semibold text-2xl text-white">68</span><span class="text-sm font-label text-white/70">%</span></div></div><div class="p-3.5 rounded-2xl bg-white/5 border border-white/10 flex flex-col"><span class="text-xs font-label uppercase tracking-wider text-white/50 mb-1">Wind</span><div class="flex items-baseline gap-1 mt-auto"><span class="font-headline font-semibold text-2xl text-white">1.7</span><span class="text-sm font-label text-white/70">m/s</span></div></div><div class="p-3.5 rounded-2xl bg-white/5 border border-white/10 flex flex-col"><span class="text-xs font-label uppercase tracking-wider text-white/50 mb-1">Pressure</span><div class="flex items-baseline gap-1 mt-auto"><span class="font-headline font-semibold text-2xl text-white">1014</span><span class="text-sm font-label text-white/70">hPa</span></div></div></div></div></div></div><div class="flex items-center justify-center gap-2 mt-12 text-white/50 text-xs font-label uppercase tracking-widest"><span class="material-symbols-outlined text-base animate-pulse" data-icon="keyboard_arrow_down">keyboard_arrow_down</span><span>Forecast, pollutants &amp; map</span></div></main>
+</body></html>
