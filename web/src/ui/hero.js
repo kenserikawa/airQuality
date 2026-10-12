@@ -38,7 +38,7 @@ function locationChip(station, now) {
         return chip('map-pin', station.name);
     }
     if (isStale(station.time, now)) {
-        return chip('clock', `${station.name} · Last reading ${relativeTime(station.time, now)}`, 'text-white/80');
+        return chip('clock', `${station.name} · Last reading ${relativeTime(station.time, now)}`, 'text-white/85');
     }
     return chip('map-pin', `${station.name} · Updated ${relativeTime(station.time, now)}`);
 }
@@ -63,11 +63,17 @@ function rightNow(station) {
             el('span', { class: 'accent-dot !h-2 !w-2' }), 'Right now'),
         el('div', { class: 'mt-5 grid grid-cols-2 gap-3' },
             weather.map((item) => el('div', { class: 'glass-tile p-4', 'data-role': 'now-tile' },
-                el('p', { class: 'label flex items-center gap-2 text-white/70' }, icon(WEATHER_ICONS[item.key], { size: 15 }), item.label),
+                el('p', { class: 'label flex items-center gap-2 text-white/85' }, icon(WEATHER_ICONS[item.key], { size: 15 }), item.label),
                 el('p', { class: 'mt-3 font-display text-3xl font-light' }, String(item.value),
-                    el('span', { class: 'ml-1 text-base text-white/70' }, item.unit)),
+                    el('span', { class: 'ml-1 text-base text-white/85' }, item.unit)),
             ))),
     );
+}
+
+// Un botón en vez de un enlace #fragmento: el fragmento crearía una entrada de historial y dispararía popstate.
+function scrollToDetails(reducedMotion) {
+    document.querySelector('main section:not([hidden]):not(#hero)')
+        ?.scrollIntoView({ behavior: reducedMotion ? 'auto' : 'smooth', block: 'start' });
 }
 
 export function renderHero(root, { station, now = new Date(), reducedMotion = false }) {
@@ -91,7 +97,7 @@ export function renderHero(root, { station, now = new Date(), reducedMotion = fa
                     el('div', { class: 'pb-3 lg:pb-6' },
                         el('p', { class: 'flex items-center gap-3 font-display text-3xl font-semibold lg:text-[40px]' },
                             el('span', { class: 'accent-dot' }), category.label),
-                        hasReading ? el('p', { class: 'label mt-2 text-white/70' }, `AQI RANGE (${category.range})`) : null,
+                        hasReading ? el('p', { class: 'label mt-2 text-white' }, `AQI RANGE (${category.range})`) : null,
                     ),
                 ),
                 el('div', { class: 'flex flex-wrap gap-3' },
@@ -103,8 +109,12 @@ export function renderHero(root, { station, now = new Date(), reducedMotion = fa
             ),
             rightNow(station),
         ),
-        el('a', { href: '#forecast', class: 'glass-pill float-cue mx-auto mt-12 flex w-fit items-center gap-2 px-4 py-2 text-sm text-white/85' },
-            'Forecast, pollutants & map', icon('chevron-down', { size: 16 })),
+        el('button', {
+            type: 'button',
+            'data-role': 'scroll-cue',
+            class: 'glass-pill float-cue mx-auto mt-12 flex w-fit items-center gap-2 px-4 py-2 text-sm text-white/85',
+            onClick: () => scrollToDetails(reducedMotion),
+        }, 'Forecast, pollutants & map', icon('chevron-down', { size: 16 })),
     );
 
     if (hasReading) {

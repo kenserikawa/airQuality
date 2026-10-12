@@ -45,7 +45,12 @@ async function fetchJson(target, signal) {
         return body.data;
     }
     if (body?.status === 'error') {
-        throw new NotFoundError(typeof body.data === 'string' ? body.data : undefined);
+        const message = typeof body.data === 'string' ? body.data : '';
+        // Solo "Unknown station" significa que la estación no existe; cuota o token agotados son fallos del servicio.
+        if (/unknown station/i.test(message)) {
+            throw new NotFoundError(message);
+        }
+        throw new OfflineError(message || undefined);
     }
     throw new OfflineError('Unexpected response from the air quality service');
 }

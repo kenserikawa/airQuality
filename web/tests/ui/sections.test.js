@@ -43,6 +43,7 @@ describe('renderForecast', () => {
         expect(bars).toHaveLength(6);
         expect(bars[0].getAttribute('aria-label')).toBe('Sun 11: average 38, min 30, max 45');
         expect(bars[3].textContent).toContain('Moderate');
+        expect(bars[3].querySelector('[data-role="forecast-avg"]').style.color).toBe('');
     });
 
     test('cambiar de pestaña repinta con esa clave', () => {
@@ -50,6 +51,32 @@ describe('renderForecast', () => {
         root.querySelectorAll('[role="tab"]')[1].click();
         expect(root.querySelectorAll('[data-role="forecast-day"]')).toHaveLength(1);
         expect(root.querySelector('[role="tab"][aria-selected="true"]').textContent).toBe('O3');
+    });
+
+    test('las pestañas conservan el foco y siguen el patrón ARIA (flechas, tabindex, aria-controls)', () => {
+        document.body.append(root);
+        renderForecast(root, madridStation({ forecast: { ...forecast, pm10: forecast.pm25 } }), { today });
+        let tabs = [...root.querySelectorAll('[role="tab"]')];
+        const panel = root.querySelector('[role="tabpanel"]');
+        expect(tabs.map((t) => t.textContent)).toEqual(['PM2.5', 'PM10', 'O3']);
+        expect(tabs[0].getAttribute('aria-controls')).toBe(panel.id);
+        expect(panel.getAttribute('aria-labelledby')).toBe(tabs[0].id);
+        expect(tabs.map((t) => t.tabIndex)).toEqual([0, -1, -1]);
+
+        tabs[2].focus();
+        tabs[2].click();
+        tabs = [...root.querySelectorAll('[role="tab"]')];
+        expect(document.activeElement).toBe(tabs[2]);
+        expect(tabs[2].getAttribute('aria-selected')).toBe('true');
+
+        tabs[2].dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true }));
+        tabs = [...root.querySelectorAll('[role="tab"]')];
+        expect(document.activeElement).toBe(tabs[0]);
+        expect(tabs[0].getAttribute('aria-selected')).toBe('true');
+
+        tabs[0].dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles: true }));
+        expect(document.activeElement.textContent).toBe('O3');
+        root.remove();
     });
 
     test('sin previsión, o solo con días pasados, se oculta', () => {

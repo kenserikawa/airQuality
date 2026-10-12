@@ -16,8 +16,8 @@ function dayBar(day, scaleMax) {
         role: 'img',
         'aria-label': `${day.label}: average ${day.avg}, min ${day.min}, max ${day.max}`,
     },
-    el('p', { class: 'font-display text-2xl font-semibold', style: { color: day.category.accent } }, String(day.avg)),
-    el('p', { class: 'label text-[10px] text-white/70' }, day.category.label),
+    el('p', { class: 'font-display text-2xl font-semibold', 'data-role': 'forecast-avg' }, String(day.avg)),
+    el('p', { class: 'label text-[10px] text-white/85' }, day.category.label),
     el('div', { class: 'relative my-1 h-28 w-2 rounded-full bg-white/10' },
         el('span', {
             class: 'absolute inset-x-0 rounded-full',
@@ -30,7 +30,9 @@ function dayBar(day, scaleMax) {
     el('p', { class: 'text-sm font-semibold' }, day.label));
 }
 
-export function renderForecast(root, station, { today = todayIso(), activeKey } = {}) {
+const PANEL_ID = 'forecast-panel';
+
+export function renderForecast(root, station, { today = todayIso(), activeKey, focusTab = false } = {}) {
     const keys = forecastKeys(station?.forecast).filter((key) => forecastDays(station.forecast, key, today).length > 0);
     if (keys.length === 0) {
         hideSection(root);
@@ -40,16 +42,36 @@ export function renderForecast(root, station, { today = todayIso(), activeKey } 
     const days = forecastDays(station.forecast, key, today);
     const scaleMax = Math.max(50, ...days.map((day) => day.max));
 
-    const tabs = el('div', { role: 'tablist', 'aria-label': 'Pollutant', class: 'glass-pill flex p-1' },
+    const select = (k) => renderForecast(root, station, { today, activeKey: k, focusTab: true });
+    const onKeyDown = (event) => {
+        const index = keys.indexOf(key);
+        const target = { ArrowRight: index + 1, ArrowLeft: index - 1, Home: 0, End: keys.length - 1 }[event.key];
+        if (target !== undefined) {
+            event.preventDefault();
+            select(keys[(target + keys.length) % keys.length]);
+        }
+    };
+    const tabs = el('div', { role: 'tablist', 'aria-label': 'Pollutant', class: 'glass-pill flex p-1', onKeydown: onKeyDown },
         keys.map((k) => el('button', {
             type: 'button',
             role: 'tab',
+            id: `forecast-tab-${k}`,
             'aria-selected': String(k === key),
-            class: `rounded-full px-4 py-1.5 text-sm font-semibold ${k === key ? 'bg-white text-slate-900' : 'text-white/80 hover:text-white'}`,
-            onClick: () => renderForecast(root, station, { today, activeKey: k }),
+            'aria-controls': PANEL_ID,
+            tabindex: k === key ? '0' : '-1',
+            class: `rounded-full px-4 py-1.5 text-sm font-semibold ${k === key ? 'bg-white text-slate-900' : 'text-white/85 hover:text-white'}`,
+            onClick: () => select(k),
         }, pollutantLabel(k))));
 
     showSection(root,
         sectionHeader('forecast-title', 'calendar', 'Forecast · next 6 days', 'Daily average with min–max range', tabs),
-        el('div', { class: 'mt-6 flex gap-3 overflow-x-auto pb-1', role: 'tabpanel' }, days.map((day) => dayBar(day, scaleMax))));
+        el('div', {
+            id: PANEL_ID,
+            role: 'tabpanel',
+            'aria-labelledby': `forecast-tab-${key}`,
+            class: 'mt-6 flex gap-3 overflow-x-auto pb-1',
+        }, days.map((day) => dayBar(day, scaleMax))));
+    if (focusTab) {
+        root.querySelector(`#forecast-tab-${key}`)?.focus();
+    }
 }

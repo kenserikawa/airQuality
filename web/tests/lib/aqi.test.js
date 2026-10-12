@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'vitest';
 import {
     CATEGORIES, NEUTRAL, blend, contrastRatio, forecastDays, forecastKeys, getCategory, isStale,
-    parseAqi, pickPollutants, pickWeather, pollutantLabel, relativeTime, scalePosition, splitStationName,
+    GLASS_ALPHA, GLASS_COLOR, parseAqi, pickPollutants, pickWeather, pollutantLabel, relativeTime, scalePosition, splitStationName, textOn,
 } from '../../src/lib/aqi.js';
 
 describe('getCategory', () => {
@@ -31,7 +31,7 @@ describe('contraste WCAG con texto blanco', () => {
     test.each([NEUTRAL, ...CATEGORIES])('$key', ({ sky: [top, middle, horizon] }) => {
         expect(contrastRatio('#FFFFFF', top)).toBeGreaterThanOrEqual(4.5);
         expect(contrastRatio('#FFFFFF', middle)).toBeGreaterThanOrEqual(4.5);
-        expect(contrastRatio('#FFFFFF', blend(horizon, '#060E20', 0.55))).toBeGreaterThanOrEqual(4.5);
+        expect(contrastRatio('#FFFFFF', blend(horizon, GLASS_COLOR, GLASS_ALPHA))).toBeGreaterThanOrEqual(4.5);
     });
 
     test('contrastRatio y blend conocidos', () => {
@@ -127,4 +127,15 @@ describe('scalePosition', () => {
     ])('%s → %s', (aqi, position) => expect(scalePosition(aqi)).toBeCloseTo(position, 5));
 
     test('sin lectura → null', () => expect(scalePosition('-')).toBeNull());
+});
+
+describe('contraste de texto secundario y chips', () => {
+    test.each([NEUTRAL, ...CATEGORIES])('$key: blanco al 85 % sobre cristal oscuro en el horizonte', ({ sky }) => {
+        const glass = blend(sky[2], GLASS_COLOR, GLASS_ALPHA);
+        expect(contrastRatio(blend(glass, '#FFFFFF', 0.85), glass)).toBeGreaterThanOrEqual(4.5);
+    });
+
+    test.each(CATEGORIES)('$key: textOn(accent) alcanza 4,5:1', ({ accent }) => {
+        expect(contrastRatio(textOn(accent), accent)).toBeGreaterThanOrEqual(4.5);
+    });
 });

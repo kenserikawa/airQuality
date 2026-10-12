@@ -7,7 +7,7 @@ export function sectionHeader(id, iconName, title, subtitle, extra = null) {
         el('div', {},
             el('h2', { id, class: 'flex items-center gap-3 font-display text-xl font-semibold lg:text-[22px]' },
                 icon(iconName, { size: 20, className: 'text-[var(--accent)]' }), title),
-            subtitle ? el('p', { class: 'mt-1 text-sm text-white/70' }, subtitle) : null),
+            subtitle ? el('p', { class: 'mt-1 text-sm text-white/85' }, subtitle) : null),
         extra);
 }
 

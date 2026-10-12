@@ -1,5 +1,10 @@
 // Lógica pura del dominio AQI: categorías, cielos, textos y formateo. Sin DOM ni red.
 
+// Cristal oscuro de tarjetas y píldoras (styles.css): con él, el blanco al 85 % cumple 4,5:1 sobre cualquier horizonte.
+export const GLASS_COLOR = '#060E20';
+export const GLASS_ALPHA = 0.6;
+const INK = '#0F172A';
+
 export const NEUTRAL = {
     key: 'neutral',
     label: 'No current reading',
@@ -244,4 +249,9 @@ export function scalePosition(aqi) {
     const index = Math.min(SCALE_BREAKS.findIndex((limit, i) => clamped <= SCALE_BREAKS[i + 1]), segments - 1);
     const [low, high] = [SCALE_BREAKS[index], SCALE_BREAKS[index + 1]];
     return (index + (clamped - low) / (high - low)) / segments;
+}
+
+// Color de texto (blanco o tinta) con más contraste sobre un fondo de color sólido, p. ej. los chips de categoría.
+export function textOn(hex) {
+    return contrastRatio('#FFFFFF', hex) >= contrastRatio(INK, hex) ? '#FFFFFF' : INK;
 }

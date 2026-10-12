@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import { beforeEach, describe, expect, test } from 'vitest';
+import { beforeEach, describe, expect, test, vi } from 'vitest';
 import { madridStation } from '../fixtures/station.js';
 import { renderHero } from '../../src/ui/hero.js';
 
@@ -77,5 +77,21 @@ describe('renderHero', () => {
         renderHero(root, { station: madridStation({ aqi: 64 }), now, reducedMotion: true });
         expect(root.querySelectorAll('[data-role="aqi"]')).toHaveLength(1);
         expect(root.querySelector('[data-role="aqi"]').textContent).toBe('64');
+    });
+
+    test('la pista de scroll es un botón que lleva a la primera sección visible, sin tocar la URL', () => {
+        document.body.innerHTML = '<main><section id="hero"></section><section id="forecast" hidden></section><section id="pollutants"></section></main>';
+        const hero = document.getElementById('hero');
+        const scrolled = [];
+        const original = Element.prototype.scrollIntoView;
+        Element.prototype.scrollIntoView = vi.fn(function scrollIntoView() { scrolled.push(this.id); });
+        renderHero(hero, { station: madridStation(), now, reducedMotion: true });
+        const cue = hero.querySelector('[data-role="scroll-cue"]');
+        expect(cue.tagName).toBe('BUTTON');
+        expect(hero.querySelector('a[href^="#"]')).toBeNull();
+        cue.click();
+        expect(scrolled).toEqual(['pollutants']);
+        Element.prototype.scrollIntoView = original;
+        document.body.innerHTML = '';
     });
 });

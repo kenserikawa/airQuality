@@ -133,6 +133,24 @@ describe('navegación', () => {
         expect(deps.pushStationId).not.toHaveBeenCalled();
     });
 
+    test('popstate con la estación que ya se muestra no vuelve a cargarla', async () => {
+        startApp(deps);
+        await flush();
+        popstate(5725);
+        await flush();
+        expect(deps.fetchStation).not.toHaveBeenCalled();
+        expect(document.getElementById('hero').classList.contains('dimmed')).toBe(false);
+    });
+
+    test('elegir en el buscador la estación que ya se muestra no recarga ni añade historial', async () => {
+        startApp(deps);
+        await flush();
+        search.onSelect(5725);
+        await flush();
+        expect(deps.fetchStation).not.toHaveBeenCalled();
+        expect(deps.pushStationId).not.toHaveBeenCalled();
+    });
+
     test('una respuesta antigua no pisa a la más reciente', async () => {
         let resolveSlow;
         deps.fetchStation.mockImplementationOnce(() => new Promise((resolve) => { resolveSlow = resolve; }));

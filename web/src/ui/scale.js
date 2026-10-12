@@ -21,7 +21,7 @@ export function renderScale(root, station) {
                 },
                 el('p', { class: 'flex items-center gap-2 text-sm font-semibold' },
                     el('span', { class: 'h-2.5 w-2.5 rounded-full', style: { background: category.accent } }), category.label),
-                el('p', { class: 'mt-1 text-xs text-white/70' }, category.range));
+                el('p', { class: 'mt-1 text-xs text-white/85' }, category.range));
             })),
         aqi === null ? null : el('div', { class: 'glass-tile mt-6 flex gap-4 border-l-4 !border-l-[var(--accent)] p-5' },
             icon('check-circle', { size: 22, className: 'shrink-0 text-[var(--accent)]' }),

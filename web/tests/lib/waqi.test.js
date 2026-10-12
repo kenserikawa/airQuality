@@ -59,6 +59,13 @@ describe('fetchStation', () => {
         await expect(fetchStation(1)).rejects.toBeInstanceOf(NotFoundError);
     });
 
+    test('otros status error de la API (cuota, token) → OfflineError, no NotFoundError', async () => {
+        fetchMock.mockResolvedValueOnce(jsonResponse({ status: 'error', data: 'Over quota' }));
+        await expect(fetchStation(1)).rejects.toBeInstanceOf(OfflineError);
+        fetchMock.mockResolvedValueOnce(jsonResponse({ status: 'error', data: 'Invalid key' }));
+        await expect(fetchStation(1)).rejects.toBeInstanceOf(OfflineError);
+    });
+
     test('fallo de red, cuerpo no JSON y timeout → OfflineError', async () => {
         fetchMock.mockRejectedValueOnce(new TypeError('Failed to fetch'));
         await expect(fetchStation(1)).rejects.toBeInstanceOf(OfflineError);

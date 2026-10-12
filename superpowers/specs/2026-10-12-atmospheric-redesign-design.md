@@ -102,7 +102,7 @@ Una línea: "Data: World Air Quality Index Project · aqicn.org" + atribuciones 
 ### 3.7 Accesibilidad y movimiento
 
 - `prefers-reduced-motion: reduce` → sin partículas, sin conteo animado (valor directo), transiciones de cielo instantáneas.
-- Contraste (WCAG AA, ≥ 4,5:1): todo el texto es blanco. El cielo es fijo (ocupa el viewport y el contenido se desplaza por encima). El texto que va directamente sobre el cielo (hero) solo ocupa las zonas superior y media, que cumplen 4,5:1 con blanco. Cualquier texto que pueda pasar por encima del horizonte (todas las tarjetas, píldoras y la pista de scroll) va sobre cristal oscuro (§4.1), que cumple 4,5:1 incluso sobre el horizonte más claro. Ambas cosas se validan con tests (§7.1).
+- Contraste (WCAG AA, ≥ 4,5:1): todo el texto es blanco; el texto secundario puede bajar como mínimo a blanco al 85 % solo sobre cristal; el texto que va directamente sobre el cielo es blanco puro. Los chips de color sólido (AQI en el buscador, categoría en contaminantes) usan blanco o tinta `#0F172A`, el que más contraste dé con el acento (`textOn`); los números de la previsión van en blanco y el color de categoría solo en barras y puntos. El cielo es fijo (ocupa el viewport y el contenido se desplaza por encima). El texto que va directamente sobre el cielo (hero) solo ocupa las zonas superior y media, que cumplen 4,5:1 con blanco. Cualquier texto que pueda pasar por encima del horizonte (todas las tarjetas, píldoras y la pista de scroll) va sobre cristal oscuro (§4.1), que cumple 4,5:1 incluso sobre el horizonte más claro. Ambas cosas se validan con tests (§7.1).
 - Región `aria-live="polite"` que anuncia "Air quality in {nombre}: {aqi}, {categoría}".
 - Navegación completa con teclado; foco visible en todos los controles.
 - `<html lang="en">`; `<title>` "AirQuality — Air quality near you" (actualizado a "{aqi} {categoría} · {nombre} — AirQuality" con datos).
@@ -127,7 +127,7 @@ El `<title>` de `good-hero.html` aún dice "Aether AQI": no usar.
 ### 4.1 Tokens
 
 - **Fuentes:** Sora (titulares y número; número en peso 200–300, `letter-spacing: -0.055em`, `tabular-nums`) y Manrope (texto y etiquetas; etiquetas en mayúsculas con `+0.08em`).
-- **Cristal oscuro** (tarjetas, píldoras, desplegable, pista de scroll): fondo `rgba(6,14,32,0.55)`, `backdrop-filter: blur(28px)` (píldoras 24 px), borde `1px rgba(255,255,255,0.18)`, sombra `0 20px 50px rgba(7,30,39,0.25)` + `inset 0 1px 0 rgba(255,255,255,0.22)`, radio 24 px (píldoras: completo). Es más oscuro que el `rgba(255,255,255,0.08)` de Stitch porque, con cielo fijo, las tarjetas pasan sobre horizontes claros: con `#060E20` al 55 % el texto blanco alcanza ≥ 4,5:1 sobre todos los horizontes (el mínimo calculado es 0,52, en Moderate).
+- **Cristal oscuro** (tarjetas, píldoras, desplegable, pista de scroll): fondo `rgba(6,14,32,0.6)`, `backdrop-filter: blur(28px)` (píldoras 24 px), borde `1px rgba(255,255,255,0.18)`, sombra `0 20px 50px rgba(7,30,39,0.25)` + `inset 0 1px 0 rgba(255,255,255,0.22)`, radio 24 px (píldoras: completo). Es más oscuro que el `rgba(255,255,255,0.08)` de Stitch porque, con cielo fijo, las tarjetas pasan sobre horizontes claros: con `#060E20` al 60 % el texto blanco, y también el blanco al 85 % del texto secundario, alcanza ≥ 4,5:1 sobre todos los horizontes (mínimos calculados: 0,52 para blanco puro y 0,59 para blanco al 85 %, ambos en Moderate).
 - **Cielos** (arriba → medio → horizonte) y **acentos** por categoría. Las zonas medias de Good, Moderate y USG están oscurecidas respecto a la propuesta inicial (mismo tono) para que el texto blanco del hero alcance 4,5:1:
 
 | Categoría | Rango | Cielo | Acento |
@@ -172,7 +172,7 @@ Implicación para la salud (de aqicn.org, como en la réplica) y recomendación 
 | Módulo | Responsabilidad | Interfaz |
 |---|---|---|
 | `config.js` | Token y URLs base | `WAQI_TOKEN`, `WAQI_API`, `WAQI_TILES` |
-| `lib/aqi.js` | Lógica pura: categorías (incl. neutral), cielos, acentos, textos (§4.2), contaminantes legibles, meteo con unidades, previsión filtrada, tiempo relativo, contraste WCAG | `getCategory(aqi)`, `NEUTRAL`, `CATEGORIES`, `pickPollutants(iaqi)`, `pickWeather(iaqi)`, `forecastDays(daily, key, today)`, `relativeTime(iso, now)`, `isStale(iso, now)`, `contrastRatio(hexA, hexB)`, `blend(hexBase, hexOver, alpha)`, `splitStationName(name)` |
+| `lib/aqi.js` | Lógica pura: categorías (incl. neutral), cielos, acentos, textos (§4.2), contaminantes legibles, meteo con unidades, previsión filtrada, tiempo relativo, contraste WCAG | `getCategory(aqi)`, `NEUTRAL`, `CATEGORIES`, `pickPollutants(iaqi)`, `pickWeather(iaqi)`, `forecastDays(daily, key, today)`, `relativeTime(iso, now)`, `isStale(iso, now)`, `contrastRatio(hexA, hexB)`, `blend(hexBase, hexOver, alpha)`, `textOn(hex)`, `GLASS_COLOR`, `GLASS_ALPHA`, `scalePosition(aqi)`, `splitStationName(name)` |
 | `lib/waqi.js` | Cliente HTTP; timeout 10 s (`AbortSignal.timeout`) combinado con la señal del llamador; normaliza respuestas; distingue errores | `fetchStation(uid)`, `fetchHere()`, `searchStations(q, {signal})`, `findNearestStation(lat, lng)`; errores tipados `OfflineError`, `NotFoundError` |
 | `lib/location.js` | Geolocalización (timeout 8 s, `maximumAge` 10 min) → `findNearestStation`; si falla → `fetchHere()`; si falla → `unlocated` | `locate()` → `{ station }` o lanza `UnlocatedError` |
 | `lib/url-state.js` | `?station=<uid>` | `readStationId()`, `pushStationId(uid)`, `onStationIdChange(cb)` |
@@ -191,7 +191,7 @@ Implicación para la salud (de aqicn.org, como en la réplica) y recomendación 
 
 ### 5.3 Estación más cercana
 
-`findNearestStation(lat, lng)`: pide `/map/bounds/` con un recuadro de ±0,25°; descarta estaciones con `aqi` no numérico; elige la de menor distancia (haversine); si no hay ninguna, repite con ±1°; si sigue sin haber, lanza `NotFoundError` (y `locate()` pasa a `fetchHere()`). Después carga `fetchStation(uid)`.
+`findNearestStation(lat, lng)`: pide `/map/bounds/` con un recuadro de ±0,25° y ordena por distancia (haversine); elige la más cercana con `aqi` numérico y, si ninguna lo tiene, la más cercana a secas (`/map/bounds/` marca con "-" las estaciones con lectura antigua aunque su ficha conserve el último valor, que se muestra como "Last reading"); solo si el recuadro está vacío repite con ±1°; si sigue sin haber estaciones, lanza `NotFoundError` (y `locate()` pasa a `fetchHere()`). Después carga `fetchStation(uid)`. Los uid pueden ser negativos (sensores ciudadanos).
 
 ### 5.4 Flujo
 
@@ -217,8 +217,8 @@ Datos externos solo como texto (`textContent`/hijos string de `el()`); `href` so
 
 ### 7.1 Unitarios (Vitest, `web/tests/lib/`)
 
-- `aqi`: límites 0/50/51/100/101/150/151/200/201/300/301/500; `"-"`, `""`, `null`, `NaN` → neutral; textos §4.2; `pickPollutants` (orden, nombres, solo presentes, 0 cuenta); `pickWeather` (unidades, solo presentes); `forecastDays` (filtra días anteriores a hoy, máx. 6, orden); `relativeTime` ("just now", "5 minutes ago", "2 hours ago", "2 days ago"); `isStale` (> 24 h); `splitStationName`; **contraste**: para cada uno de los 7 cielos, `contrastRatio('#FFFFFF', top) ≥ 4.5`, `contrastRatio('#FFFFFF', middle) ≥ 4.5` y `contrastRatio('#FFFFFF', blend(horizon, '#060E20', 0.55)) ≥ 4.5` (con `blend` exportado por `lib/aqi.js`).
-- `waqi` (`fetch` simulado en la frontera): normalización de cada endpoint; `aqi` string → número o `null`; `status: "error"` → `NotFoundError`; red/timeout → `OfflineError`; cancelación por señal; `findNearestStation` (elige la más cercana con lectura, ignora `"-"`, amplía a ±1°, lanza si no hay).
+- `aqi`: límites 0/50/51/100/101/150/151/200/201/300/301/500; `"-"`, `""`, `null`, `NaN` → neutral; textos §4.2; `pickPollutants` (orden, nombres, solo presentes, 0 cuenta); `pickWeather` (unidades, solo presentes); `forecastDays` (filtra días anteriores a hoy, máx. 6, orden); `relativeTime` ("just now", "5 minutes ago", "2 hours ago", "2 days ago"); `isStale` (> 24 h); `splitStationName`; **contraste**: para cada uno de los 7 cielos, `contrastRatio('#FFFFFF', top) ≥ 4.5`, `contrastRatio('#FFFFFF', middle) ≥ 4.5` y `contrastRatio('#FFFFFF', blend(horizon, GLASS_COLOR, GLASS_ALPHA)) ≥ 4.5`, blanco al 85 % sobre ese cristal ≥ 4.5 y `textOn(accent)` ≥ 4.5 para cada acento; un test de estilo rechaza `text-white/NN` con NN < 85 en `ui/` e `index.html` y comprueba que el CSS usa `GLASS_COLOR`/`GLASS_ALPHA`.
+- `waqi` (`fetch` simulado en la frontera): normalización de cada endpoint; `aqi` string → número o `null`; `status: "error"` → `NotFoundError`; red/timeout → `OfflineError`; cancelación por señal; `findNearestStation` (elige la más cercana con lectura; si ninguna tiene lectura, la más cercana; amplía a ±1° solo con el recuadro vacío; lanza si no hay estaciones); solo `status:"error"` con "Unknown station" es `NotFoundError` (cuota o token → `OfflineError`).
 - `location` (`navigator.geolocation` simulado): concedido → estación cercana; denegado → IP; sin respuesta en 8 s → IP; IP falla → `UnlocatedError`.
 - `url-state`: lectura, escritura y `popstate`; uid no numérico se ignora.
 
@@ -244,7 +244,7 @@ Tras el despliegue por Actions, repetir 7.3 contra la URL pública.
 ## 8. Riesgos
 
 - **Generaciones de Stitch inconsistentes:** las referencias son guía visual; la spec manda en datos y comportamiento.
-- **Tiles de CARTO y WAQI:** dependencias externas con políticas de uso; tráfico de demo bajo, atribución incluida.
+- **Teselas de OSM y WAQI:** dependencias externas con políticas de uso; tráfico de demo bajo, atribución incluida.
 - **Cambio del origen de Pages:** hasta que el usuario cambie a "GitHub Actions", Pages seguirá sirviendo `docs/`; por eso `docs/` se borra solo después de verificar la nueva web.
 - **Token público:** si se abusa, cambiarlo en `config.js`.
 - **Datos antiguos de estaciones:** se señalan como "Last reading" (§3.2).

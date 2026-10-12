@@ -51,6 +51,7 @@ export function startApp({
     const locateButton = $('locate');
 
     let current = null;
+    let loadingUid = null;
     let request = 0;
     let lastAction = () => {};
     let map = null;
@@ -131,8 +132,13 @@ export function startApp({
         }
     }
 
+    function isShowing(uid) {
+        return uid === (loadingUid ?? current?.uid);
+    }
+
     async function loadStation(uid, { history = 'none' } = {}) {
         const id = ++request;
+        loadingUid = uid;
         lastAction = () => loadStation(uid, { history });
         startLoading();
         try {
@@ -147,12 +153,17 @@ export function startApp({
             if (id === request) {
                 showProblem(error instanceof NotFoundError ? 'not-found' : 'offline');
             }
+        } finally {
+            if (id === request) {
+                loadingUid = null;
+            }
         }
     }
 
     async function useLocation({ history = 'push' } = {}) {
         const id = ++request;
         lastAction = () => useLocation({ history });
+        loadingUid = null;
         current = null;
         applySky(NEUTRAL);
         renderState(hero, 'locating');
@@ -173,11 +184,17 @@ export function startApp({
     }
 
     mountSearch(searchRoot, {
-        onSelect: (uid) => loadStation(uid, { history: 'push' }),
+        onSelect: (uid) => (isShowing(uid) ? undefined : loadStation(uid, { history: 'push' })),
         onUseLocation: () => useLocation({ history: 'push' }),
     });
     locateButton.addEventListener('click', () => useLocation({ history: 'push' }));
-    onStationIdChange((uid) => (uid === null ? useLocation({ history: 'none' }) : loadStation(uid)));
+    onStationIdChange((uid) => {
+        if (uid === null) {
+            useLocation({ history: 'none' });
+        } else if (!isShowing(uid)) {
+            loadStation(uid);
+        }
+    });
 
     const initial = readStationId();
     if (initial === null) {

@@ -23,7 +23,7 @@ export function aqiScaleBar(aqi, { height = 'h-2', ticks = true } = {}) {
         'aria-label': position === null ? 'AQI scale from 0 to 500' : `AQI ${aqi} on a scale from 0 to 500`,
     },
     bar,
-    ticks ? el('div', { class: 'mt-2 flex justify-between text-[11px] font-semibold text-white/70', 'aria-hidden': 'true' },
+    ticks ? el('div', { class: 'mt-2 flex justify-between text-[11px] font-semibold text-white', 'aria-hidden': 'true' },
         TICKS.map((tick) => el('span', {}, tick))) : null,
     );
 }

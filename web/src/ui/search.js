@@ -1,5 +1,5 @@
 // Buscador de estaciones (spec §3.3): combobox ARIA 1.2 con espera, cancelación, teclado y atajos.
-import { getCategory, splitStationName } from '../lib/aqi.js';
+import { getCategory, splitStationName, textOn } from '../lib/aqi.js';
 import { searchStations } from '../lib/waqi.js';
 import { clear, el } from './dom.js';
 import { icon } from './icons.js';
@@ -37,12 +37,12 @@ export function mountSearch(root, { search = searchStations, onSelect, onUseLoca
         placeholder: 'Search any city or station',
         autocomplete: 'off',
         spellcheck: 'false',
-        class: 'min-w-0 flex-1 bg-transparent text-base text-white placeholder:text-white/60 focus:outline-none',
+        class: 'min-w-0 flex-1 bg-transparent text-base text-white placeholder:text-white/85 focus:outline-none',
     });
     const listbox = el('ul', { id: `${ID}-listbox`, role: 'listbox', 'aria-label': 'Stations', class: 'flex flex-col gap-1' });
     const panel = el('div', { class: 'glass absolute inset-x-0 top-full z-40 mt-3 max-h-[70vh] overflow-y-auto p-3', hidden: true },
         listbox,
-        el('p', { class: 'mt-2 flex items-center gap-3 border-t border-white/10 px-2 pt-3 text-xs text-white/70', 'aria-hidden': 'true' },
+        el('p', { class: 'mt-2 flex items-center gap-3 border-t border-white/10 px-2 pt-3 text-xs text-white/85', 'aria-hidden': 'true' },
             el('kbd', { class: 'rounded border border-white/20 px-1.5' }, '↑↓'), 'navigate',
             el('kbd', { class: 'rounded border border-white/20 px-1.5' }, 'Enter'), 'select',
             el('kbd', { class: 'ml-auto rounded border border-white/20 px-1.5' }, 'Esc'), 'close'),
@@ -64,7 +64,7 @@ export function mountSearch(root, { search = searchStations, onSelect, onUseLoca
         el('span', { class: 'glass-pill flex h-10 w-10 shrink-0 items-center justify-center' }, icon('navigation', { size: 18 })),
         el('span', { class: 'flex min-w-0 flex-col' },
             el('span', { class: 'font-semibold' }, 'Use my current location'),
-            el('span', { class: 'text-sm text-white/70' }, 'Find the nearest station')),
+            el('span', { class: 'text-sm text-white/85' }, 'Find the nearest station')),
         el('span', { class: 'label ml-auto rounded-md border border-[var(--accent)] px-2 py-1 text-[11px] text-white' }, 'NEAR YOU'));
     }
 
@@ -78,13 +78,13 @@ export function mountSearch(root, { search = searchStations, onSelect, onUseLoca
         },
         el('span', {
             'data-role': 'chip',
-            class: 'flex h-8 min-w-11 shrink-0 items-center justify-center rounded-lg px-2 text-sm font-bold text-white',
-            style: { background: hasReading ? category.accent : 'rgba(255,255,255,0.15)' },
+            class: 'flex h-8 min-w-11 shrink-0 items-center justify-center rounded-lg px-2 text-sm font-bold',
+            style: hasReading ? { background: category.accent, color: textOn(category.accent) } : { background: 'rgba(255,255,255,0.15)', color: '#FFFFFF' },
         }, hasReading ? String(station.aqi) : '–'),
         el('span', { class: 'min-w-0 flex-1 truncate' },
             el('span', { class: 'font-semibold', 'data-role': 'primary' }, primary),
-            secondary ? el('span', { class: 'text-white/70' }, ' · ', el('span', { 'data-role': 'secondary' }, secondary)) : null),
-        el('span', { class: `shrink-0 text-sm ${hasReading ? 'text-white/85' : 'italic text-white/60'}` }, hasReading ? category.label : 'Offline'));
+            secondary ? el('span', { class: 'text-white/85' }, ' · ', el('span', { 'data-role': 'secondary' }, secondary)) : null),
+        el('span', { class: `shrink-0 text-sm ${hasReading ? 'text-white/85' : 'italic text-white/85'}` }, hasReading ? category.label : 'Offline'));
     }
 
     function render() {
@@ -99,11 +99,11 @@ export function mountSearch(root, { search = searchStations, onSelect, onUseLoca
         clear(listbox);
         listbox.append(locationOption(activeIndex === 0));
         if (results?.length) {
-            listbox.append(el('li', { role: 'presentation', class: 'label mt-2 px-3 pt-2 text-white/70' }, `MATCHING STATIONS (${results.length})`));
+            listbox.append(el('li', { role: 'presentation', class: 'label mt-2 px-3 pt-2 text-white/85' }, `MATCHING STATIONS (${results.length})`));
             results.forEach((station, i) => listbox.append(stationOption(station, i + 1, activeIndex === i + 1)));
         }
         if (message) {
-            listbox.append(el('li', { role: 'presentation', 'data-role': 'message', class: 'px-3 py-3 text-sm text-white/80' }, message));
+            listbox.append(el('li', { role: 'presentation', 'data-role': 'message', class: 'px-3 py-3 text-sm text-white/85' }, message));
         }
     }
 
@@ -228,9 +228,9 @@ export function mountSearch(root, { search = searchStations, onSelect, onUseLoca
     clear(root);
     root.append(el('div', { class: 'relative' },
         el('label', { class: 'glass-pill flex h-12 items-center gap-3 px-4 focus-within:border-white/50' },
-            icon('search', { size: 18, className: 'shrink-0 text-white/80' }),
+            icon('search', { size: 18, className: 'shrink-0 text-white/85' }),
             input,
-            el('kbd', { class: 'hidden rounded-md border border-white/20 px-1.5 py-0.5 text-xs text-white/70 sm:inline', 'aria-hidden': 'true' }, shortcutLabel())),
+            el('kbd', { class: 'hidden rounded-md border border-white/20 px-1.5 py-0.5 text-xs text-white/85 sm:inline', 'aria-hidden': 'true' }, shortcutLabel())),
         panel));
     render();
 
