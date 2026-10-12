@@ -60,7 +60,7 @@ describe('mountMap', () => {
         expect(urls.some((url) => url.includes('basemaps.cartocdn.com/dark_all'))).toBe(true);
         expect(urls.some((url) => url.includes('tiles.waqi.info/tiles/usepa-aqi'))).toBe(true);
         expect(L.circleMarker.mock.calls[0][0]).toEqual([40.4167754, -3.7037902]);
-        expect(marker.bindTooltip.mock.calls[0][0]).toBe('Madrid · 42');
+        expect(marker.bindTooltip.mock.calls[0][0].textContent).toBe('Madrid · 42');
     });
 
     test('update mueve vista y marcador sin recrear el mapa', async () => {
@@ -70,7 +70,7 @@ describe('mountMap', () => {
         expect(L.map).toHaveBeenCalledOnce();
         expect(mapObject.setView).toHaveBeenLastCalledWith([41.38, 2.17], 11);
         expect(marker.setLatLng).toHaveBeenCalledWith([41.38, 2.17]);
-        expect(marker.setTooltipContent).toHaveBeenCalledWith('Barcelona · 64');
+        expect(marker.setTooltipContent.mock.calls[0][0].textContent).toBe('Barcelona · 64');
     });
 
     test('update antes de cargar usa los datos nuevos al crear el mapa', async () => {
@@ -78,7 +78,7 @@ describe('mountMap', () => {
         instance.update({ geo: { lat: 41.38, lng: 2.17 }, label: 'Barcelona', aqi: null });
         await trigger();
         expect(mapObject.setView).toHaveBeenCalledWith([41.38, 2.17], 11);
-        expect(marker.bindTooltip.mock.calls[0][0]).toBe('Barcelona · –');
+        expect(marker.bindTooltip.mock.calls[0][0].textContent).toBe('Barcelona · –');
     });
 
     test('update con coordenadas inválidas oculta la sección', async () => {
@@ -94,5 +94,14 @@ describe('mountMap', () => {
         instance.update(madrid);
         await vi.waitFor(() => expect(L.map).toHaveBeenCalledOnce());
         expect(root.hidden).toBe(false);
+    });
+
+    test('la etiqueta del marcador es un nodo de texto, nunca HTML (XSS)', async () => {
+        mountMap(root, { ...madrid, label: '<img src=x onerror=alert(1)>', loadLeaflet: async () => ({ default: L }), observe });
+        await trigger();
+        const content = marker.bindTooltip.mock.calls[0][0];
+        expect(content).toBeInstanceOf(HTMLElement);
+        expect(content.querySelector('img')).toBeNull();
+        expect(content.textContent).toBe('<img src=x onerror=alert(1)> · 42');
     });
 });

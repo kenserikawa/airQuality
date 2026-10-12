@@ -13,8 +13,9 @@ function isValidGeo(geo) {
     return Number.isFinite(geo?.lat) && Number.isFinite(geo?.lng);
 }
 
-function tooltipText({ label, aqi }) {
-    return `${label} · ${aqi ?? '–'}`;
+// Leaflet trata los strings de los tooltips como HTML: se pasa un nodo para que el nombre de la estación sea texto.
+function tooltipContent({ label, aqi }) {
+    return el('span', {}, `${label} · ${aqi ?? '–'}`);
 }
 
 function observeVisibility(element, callback) {
@@ -60,7 +61,7 @@ export function mountMap(root, { geo, label, aqi, loadLeaflet = () => import('le
         L.tileLayer(WAQI_TILES, { attribution: WAQI_ATTRIBUTION, opacity: 0.8, maxZoom: 19 }).addTo(map);
         marker = L.circleMarker(center, style())
             .addTo(map)
-            .bindTooltip(tooltipText(current), { permanent: true, direction: 'top', offset: [0, -12], className: 'station-label' });
+            .bindTooltip(tooltipContent(current), { permanent: true, direction: 'top', offset: [0, -12], className: 'station-label' });
         loading = false;
     }
 
@@ -80,7 +81,7 @@ export function mountMap(root, { geo, label, aqi, loadLeaflet = () => import('le
             map.invalidateSize?.();
             marker.setLatLng(center);
             marker.setStyle(style());
-            marker.setTooltipContent(tooltipText(current));
+            marker.setTooltipContent(tooltipContent(current));
         }
     }
 
