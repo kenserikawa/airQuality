@@ -80,7 +80,7 @@ Logo cuadrado con glifo de viento + "AirQuality" (izquierda) · cápsula de bús
 1. **Forecast · next 6 days** — subtítulo "Daily average with min–max range"; pestañas PM2.5 / PM10 / O3 (solo las que tengan datos; la sección se omite si no hay ninguna). Por día (desde hoy, máx. 6): valor medio y su categoría arriba, barra vertical redondeada de min a max con punto en la media, coloreada por categoría; etiqueta "Sat 11" abajo.
 2. **Pollutants** — rejilla 3×2 de los contaminantes presentes, en orden PM2.5, PM10, O3, NO2, SO2, CO: nombre legible ("Fine particles", "Coarse particles", "Ozone", "Nitrogen dioxide", "Sulphur dioxide", "Carbon monoxide") + código, chip de categoría, valor grande, "AQI sub-index" y barra de escala con la posición del valor. Se omite si no hay ninguno.
 3. **Weather** — mismas cuatro magnitudes que "Right now" en 2×2. Se omite si no hay ninguna.
-4. **Nearby stations** — subtítulo "Colored by current AQI"; mapa Leaflet de ~360 px de alto: base oscura + capa de teselas AQI de WAQI + marcador de la estación con etiqueta "{nombre} · {aqi}"; zoom 11; sin zoom con la rueda; controles +/−. Se carga al acercarse al viewport. Se omite si no hay coordenadas válidas.
+4. **Nearby stations** — subtítulo "Colored by current AQI"; mapa Leaflet de ~360 px de alto: base OSM oscurecida + capa de teselas AQI de WAQI + marcador de la estación con etiqueta "{nombre} · {aqi}"; zoom 11; sin zoom con la rueda; controles +/−. Se carga al acercarse al viewport. Se omite si no hay coordenadas válidas.
 5. **What does {aqi} mean?** — subtítulo "US EPA Air Quality Index"; barra de 6 segmentos con marcador; 6 casillas con nombre y rango, la actual resaltada; caja con el nombre de la categoría y su implicación para la salud. Con AQI sin lectura: "What does the AQI mean?" sin marcador.
 
 ### 3.5 Pie
@@ -165,7 +165,7 @@ Implicación para la salud (de aqicn.org, como en la réplica) y recomendación 
 - Node ≥ 22.12 (hay 22.13.1).
 - `vite.config.js`: `base: '/airQuality/'`, plugin de Tailwind, Vitest con entorno `jsdom` para `tests/ui/**`.
 - Iconos: ~10 SVG inline copiados de Lucide (ISC), en `src/ui/icons.js`. Sin fuente de Material Symbols.
-- Base cartográfica oscura: CARTO `dark_all` (`https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png`) con atribución "© OpenStreetMap contributors © CARTO"; encima, teselas AQI de WAQI con opacidad ~0,8.
+- Base cartográfica oscura: teselas estándar de OpenStreetMap (`https://tile.openstreetmap.org/{z}/{x}/{y}.png`) oscurecidas con un filtro CSS solo en esa capa (`.basemap-dark`), con atribución "© OpenStreetMap contributors"; encima, teselas AQI de WAQI con opacidad ~0,8. (CARTO `dark_all` se descartó al implementar: ahora exige clave de API.)
 
 ### 5.2 Módulos (`web/src/`)
 
@@ -182,7 +182,7 @@ Implicación para la salud (de aqicn.org, como en la réplica) y recomendación 
 | `ui/search.js` | Combobox §3.3 | `mountSearch(root, { onSelect, onUseLocation })` |
 | `ui/hero.js` | Hero + "Right now" + conteo | `renderHero(root, state)` |
 | `ui/forecast.js`, `ui/pollutants.js`, `ui/weather.js`, `ui/scale.js`, `ui/footer.js` | Secciones §3.4–3.5 | `render*(root, feed)` |
-| `ui/map.js` | Leaflet bajo demanda (`import()` al entrar en viewport con IntersectionObserver) | `mountMap(root, { geo, label, aqi })` |
+| `ui/map.js` | Leaflet bajo demanda (`import()` al entrar en viewport con IntersectionObserver); etiqueta del marcador como nodo de texto (Leaflet trata los strings como HTML) | `mountMap(root, { geo, label, aqi })` |
 | `ui/states.js` | Esqueletos y mensajes §3.6 | `renderState(root, status, { onRetry })` |
 | `ui/dom.js` | Helper `el()` que añade hijos string como texto | `el(tag, attrs, ...children)` |
 | `main.js` | Arranque y orquestación | — |

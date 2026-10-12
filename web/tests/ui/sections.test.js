@@ -127,7 +127,8 @@ describe('renderFooter', () => {
         const hrefs = [...root.querySelectorAll('a')].map((a) => a.getAttribute('href'));
         expect(hrefs).toContain('https://www.eea.europa.eu/');
         expect(hrefs.every((href) => href && !href.startsWith('javascript'))).toBe(true);
-        expect(text()).toContain('© OpenStreetMap contributors © CARTO');
+        expect(text()).toContain('Map tiles © OpenStreetMap contributors');
+        expect(text()).not.toContain('CARTO');
         expect(text()).toContain('AirQuality · GitHub');
     });
 

@@ -12,8 +12,15 @@ describe('url-state', () => {
         expect(readStationId()).toBe(5725);
     });
 
+    test('acepta uid negativos (sensores ciudadanos de WAQI)', () => {
+        window.history.replaceState(null, '', '/?station=-2460868');
+        expect(readStationId()).toBe(-2460868);
+    });
+
     test('ignora valores no numéricos o ausentes', () => {
         window.history.replaceState(null, '', '/?station=abc');
+        expect(readStationId()).toBeNull();
+        window.history.replaceState(null, '', '/?station=1.5');
         expect(readStationId()).toBeNull();
         window.history.replaceState(null, '', '/');
         expect(readStationId()).toBeNull();

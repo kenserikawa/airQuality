@@ -57,7 +57,10 @@ describe('mountMap', () => {
         expect(L.map.mock.calls[0][1]).toMatchObject({ scrollWheelZoom: false });
         expect(mapObject.setView).toHaveBeenCalledWith([40.4167754, -3.7037902], 11);
         const urls = L.tileLayer.mock.calls.map((call) => call[0]);
-        expect(urls.some((url) => url.includes('basemaps.cartocdn.com/dark_all'))).toBe(true);
+        expect(urls.some((url) => url.includes('tile.openstreetmap.org'))).toBe(true);
+        expect(urls.some((url) => url.includes('cartocdn'))).toBe(false);
+        const base = L.tileLayer.mock.calls.find((call) => call[0].includes('openstreetmap'));
+        expect(base[1].className).toBe('basemap-dark');
         expect(urls.some((url) => url.includes('tiles.waqi.info/tiles/usepa-aqi'))).toBe(true);
         expect(L.circleMarker.mock.calls[0][0]).toEqual([40.4167754, -3.7037902]);
         expect(marker.bindTooltip.mock.calls[0][0].textContent).toBe('Madrid · 42');

@@ -21,6 +21,6 @@ export function renderFooter(root, station) {
         el('div', { class: 'flex flex-col gap-1' },
             el('p', {}, 'Data: ', link(WAQI_NAME, 'https://waqi.info/'), ' · ', link('aqicn.org', 'https://aqicn.org/')),
             attributions.length ? el('p', {}, 'Station data: ', joined(attributions.map((item) => link(item.name, item.url)))) : null,
-            el('p', {}, 'Map tiles ', link('© OpenStreetMap contributors', 'https://www.openstreetmap.org/copyright'), ' ', link('© CARTO', 'https://carto.com/attributions'))),
+            el('p', {}, 'Map tiles ', link('© OpenStreetMap contributors', 'https://www.openstreetmap.org/copyright'))),
         el('p', {}, link('AirQuality · GitHub', REPO_URL))));
 }

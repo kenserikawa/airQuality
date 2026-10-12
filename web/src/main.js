@@ -7,3 +7,6 @@ import '@fontsource/manrope/600.css';
 import '@fontsource/manrope/700.css';
 import 'leaflet/dist/leaflet.css';
 import './styles.css';
+import { startApp } from './app.js';
+
+startApp();

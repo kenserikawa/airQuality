@@ -1,12 +1,13 @@
-// Mapa (spec §3.4.4): Leaflet bajo demanda, base oscura de CARTO + capa AQI de WAQI y marcador de la estación.
+// Mapa (spec §3.4.4): Leaflet bajo demanda, base de OpenStreetMap oscurecida con CSS + capa AQI de WAQI y marcador.
 import { getCategory } from '../lib/aqi.js';
 import { WAQI_TILES } from '../config.js';
 import { el } from './dom.js';
 import { sectionHeader, showSection } from './section.js';
 
 const ZOOM = 11;
-const CARTO_DARK = 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png';
-const CARTO_ATTRIBUTION = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>';
+// CARTO dark_all ahora exige clave; las teselas estándar de OSM se oscurecen con .basemap-dark (styles.css).
+const OSM_TILES = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
+const OSM_ATTRIBUTION = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
 const WAQI_ATTRIBUTION = 'Air quality &copy; <a href="https://aqicn.org/">aqicn.org</a>';
 
 function isValidGeo(geo) {
@@ -57,7 +58,7 @@ export function mountMap(root, { geo, label, aqi, loadLeaflet = () => import('le
         const L = module.default ?? module;
         const center = [current.geo.lat, current.geo.lng];
         map = L.map(canvas, { scrollWheelZoom: false, zoomControl: true, attributionControl: true }).setView(center, ZOOM);
-        L.tileLayer(CARTO_DARK, { attribution: CARTO_ATTRIBUTION, subdomains: 'abcd', maxZoom: 19 }).addTo(map);
+        L.tileLayer(OSM_TILES, { attribution: OSM_ATTRIBUTION, maxZoom: 19, className: 'basemap-dark' }).addTo(map);
         L.tileLayer(WAQI_TILES, { attribution: WAQI_ATTRIBUTION, opacity: 0.8, maxZoom: 19 }).addTo(map);
         marker = L.circleMarker(center, style())
             .addTo(map)

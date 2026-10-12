@@ -41,6 +41,20 @@ body {
     pointer-events: none;
 }
 
+/* Velo bajo la cabecera fija: el contenido que pasa por debajo no compite con la marca ni el buscador. */
+.site-header::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 -28px 0;
+    z-index: -1;
+    background: linear-gradient(180deg, rgba(6, 14, 32, 0.72) 0%, rgba(6, 14, 32, 0.35) 65%, rgba(6, 14, 32, 0) 100%);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    -webkit-mask-image: linear-gradient(180deg, #000 55%, transparent);
+    mask-image: linear-gradient(180deg, #000 55%, transparent);
+    pointer-events: none;
+}
+
 /* Cristal oscuro: el texto blanco cumple 4,5:1 incluso sobre el horizonte más claro (spec §4.1). */
 .glass {
     background: rgba(6, 14, 32, 0.55);
@@ -133,6 +147,17 @@ body {
     outline-offset: 3px;
 }
 
+/* El campo de búsqueda marca el foco en su cápsula, no con un rectángulo interior. */
+#search-input:focus-visible { outline: none; }
+#search label:focus-within {
+    border-color: rgba(255, 255, 255, 0.6);
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.15), 0 8px 32px rgba(6, 26, 34, 0.18);
+}
+
+/* Si una de las dos tarjetas de la fila no tiene datos, la otra ocupa todo el ancho. */
+#data-row:has(> #weather[hidden]),
+#data-row:has(> #pollutants[hidden]) { grid-template-columns: minmax(0, 1fr); }
+
 .sr-only {
     position: absolute;
     width: 1px;
@@ -147,6 +172,7 @@ body {
 
 /* Leaflet: controles y atribución con el estilo de cristal. */
 .leaflet-container { background: #0b1220; font-family: var(--font-body); }
+.basemap-dark { filter: invert(100%) hue-rotate(180deg) brightness(0.95) contrast(0.85) saturate(0.6); }
 .leaflet-control-attribution { background: rgba(6, 14, 32, 0.7) !important; color: rgba(255, 255, 255, 0.7) !important; }
 .leaflet-control-attribution a { color: #fff !important; }
 .leaflet-bar a { background: rgba(6, 14, 32, 0.8) !important; color: #fff !important; border-color: rgba(255, 255, 255, 0.18) !important; }
@@ -156,4 +182,9 @@ body {
 @media (prefers-reduced-motion: reduce) {
     :root { transition: none; }
     .float-cue, .pulse-soft, .skeleton::after { animation: none; }
+}
+
+#search[data-highlight] label {
+    border-color: rgba(255, 255, 255, 0.7);
+    box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.15), 0 8px 32px rgba(6, 26, 34, 0.18);
 }

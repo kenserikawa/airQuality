@@ -2,7 +2,7 @@
 
 export function readStationId() {
     const value = new URLSearchParams(window.location.search).get('station');
-    return value !== null && /^\d+$/.test(value) ? Number(value) : null;
+    return value !== null && /^-?\d+$/.test(value) ? Number(value) : null;
 }
 
 function urlFor(uid) {
