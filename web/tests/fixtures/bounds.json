@@ -1,0 +1,95 @@
+{
+ "status": "ok",
+ "data": [
+  {
+   "lat": 40.420000000103,
+   "lon": -3.749166660087,
+   "uid": 3228,
+   "aqi": "-",
+   "station": {
+    "name": "Casa De Campo, Madrid, Spain",
+    "time": "2026-10-10T10:00:00+09:00"
+   }
+  },
+  {
+   "lat": 40.398055550188,
+   "lon": -3.6866666598586,
+   "uid": 3230,
+   "aqi": "-",
+   "station": {
+    "name": "Mendez Alvaro, Madrid, Spain",
+    "time": "2026-10-10T10:00:00+09:00"
+   }
+  },
+  {
+   "lat": 40.4167754,
+   "lon": -3.7037902,
+   "uid": 5725,
+   "aqi": "-",
+   "station": {
+    "name": "Madrid",
+    "time": "2026-10-10T10:00:00+09:00"
+   }
+  },
+  {
+   "lat": 40.445277769821,
+   "lon": -3.706388879969,
+   "uid": 3229,
+   "aqi": "-",
+   "station": {
+    "name": "Cuatro Caminos, Madrid, Spain",
+    "time": "2026-10-10T10:00:00+09:00"
+   }
+  },
+  {
+   "lat": 40.439722219953,
+   "lon": -3.6902777696215,
+   "uid": 3231,
+   "aqi": "-",
+   "station": {
+    "name": "Castellana, Madrid, Spain",
+    "time": "2026-10-10T10:00:00+09:00"
+   }
+  },
+  {
+   "lat": 40.421666659956,
+   "lon": -3.6822222198376,
+   "uid": 3227,
+   "aqi": "-",
+   "station": {
+    "name": "Escuelas Aguirre, Madrid, Spain",
+    "time": "2026-10-10T10:00:00+09:00"
+   }
+  },
+  {
+   "lat": 40.384700000284,
+   "lon": -3.7186000003246,
+   "uid": 10529,
+   "aqi": "-",
+   "station": {
+    "name": "Fernandez Ladreda, Madrid, Spain",
+    "time": "2026-10-10T10:00:00+09:00"
+   }
+  },
+  {
+   "lat": 40.465833329675,
+   "lon": -3.6883333302564,
+   "uid": 3232,
+   "aqi": "-",
+   "station": {
+    "name": "Plaza De Castilla, Madrid, Spain",
+    "time": "2026-10-10T10:00:00+09:00"
+   }
+  },
+  {
+   "lat": 40.494166660137,
+   "lon": -3.6602777698353,
+   "uid": 14157,
+   "aqi": "-",
+   "station": {
+    "name": "Sanchinarro, Madrid, Spain",
+    "time": "2026-10-10T10:00:00+09:00"
+   }
+  }
+ ]
+}

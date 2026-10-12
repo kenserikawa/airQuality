@@ -1,0 +1,381 @@
+{
+ "status": "ok",
+ "data": [
+  {
+   "uid": 95,
+   "aqi": "11",
+   "time": {
+    "tz": "-07:00",
+    "stime": "2026-10-11 16:00:00",
+    "vtime": 1791759600
+   },
+   "station": {
+    "name": "Madras, Oregon, USA",
+    "geo": [
+     44.6306,
+     -121.131599
+    ],
+    "url": "usa/oregon/madras"
+   }
+  },
+  {
+   "uid": 5725,
+   "aqi": "-",
+   "time": {
+    "tz": "+01:00",
+    "stime": "2026-10-10 02:00:00",
+    "vtime": 1791594000
+   },
+   "station": {
+    "name": "Madrid",
+    "geo": [
+     40.4167754,
+     -3.7037902
+    ],
+    "url": "madrid"
+   }
+  },
+  {
+   "uid": 3229,
+   "aqi": "59",
+   "time": {
+    "tz": "+01:00",
+    "stime": "2026-10-10 02:00:00",
+    "vtime": 1791594000
+   },
+   "station": {
+    "name": "Cuatro Caminos, Madrid, Spain",
+    "geo": [
+     40.445277769821,
+     -3.706388879969
+    ],
+    "url": "spain/madrid/cuatro-caminos",
+    "country": "ES"
+   }
+  },
+  {
+   "uid": 3227,
+   "aqi": "50",
+   "time": {
+    "tz": "+01:00",
+    "stime": "2026-10-10 02:00:00",
+    "vtime": 1791594000
+   },
+   "station": {
+    "name": "Escuelas Aguirre, Madrid, Spain",
+    "geo": [
+     40.421666659956,
+     -3.6822222198376
+    ],
+    "url": "spain/madrid/escuelas-aguirre",
+    "country": "ES"
+   }
+  },
+  {
+   "uid": 3230,
+   "aqi": "46",
+   "time": {
+    "tz": "+01:00",
+    "stime": "2026-10-10 02:00:00",
+    "vtime": 1791594000
+   },
+   "station": {
+    "name": "Mendez Alvaro, Madrid, Spain",
+    "geo": [
+     40.398055550188,
+     -3.6866666598586
+    ],
+    "url": "spain/madrid/mendez-alvaro",
+    "country": "ES"
+   }
+  },
+  {
+   "uid": 3228,
+   "aqi": "46",
+   "time": {
+    "tz": "+01:00",
+    "stime": "2026-10-10 02:00:00",
+    "vtime": 1791594000
+   },
+   "station": {
+    "name": "Casa De Campo, Madrid, Spain",
+    "geo": [
+     40.420000000103,
+     -3.749166660087
+    ],
+    "url": "spain/madrid/casa-de-campo",
+    "country": "ES"
+   }
+  },
+  {
+   "uid": 3231,
+   "aqi": "42",
+   "time": {
+    "tz": "+01:00",
+    "stime": "2026-10-10 02:00:00",
+    "vtime": 1791594000
+   },
+   "station": {
+    "name": "Castellana, Madrid, Spain",
+    "geo": [
+     40.439722219953,
+     -3.6902777696215
+    ],
+    "url": "spain/madrid/castellana",
+    "country": "ES"
+   }
+  },
+  {
+   "uid": 10529,
+   "aqi": "38",
+   "time": {
+    "tz": "+01:00",
+    "stime": "2026-10-10 02:00:00",
+    "vtime": 1791594000
+   },
+   "station": {
+    "name": "Fernandez Ladreda, Madrid, Spain",
+    "geo": [
+     40.384700000284,
+     -3.7186000003246
+    ],
+    "url": "spain/madrid/fernandez-ladreda",
+    "country": "ES"
+   }
+  },
+  {
+   "uid": 14157,
+   "aqi": "30",
+   "time": {
+    "tz": "+01:00",
+    "stime": "2026-10-10 02:00:00",
+    "vtime": 1791594000
+   },
+   "station": {
+    "name": "Sanchinarro, Madrid, Spain",
+    "geo": [
+     40.494166660137,
+     -3.6602777698353
+    ],
+    "url": "spain/madrid/sanchinarro",
+    "country": "ES"
+   }
+  },
+  {
+   "uid": 3232,
+   "aqi": "25",
+   "time": {
+    "tz": "+01:00",
+    "stime": "2026-10-10 02:00:00",
+    "vtime": 1791594000
+   },
+   "station": {
+    "name": "Plaza De Castilla, Madrid, Spain",
+    "geo": [
+     40.465833329675,
+     -3.6883333302564
+    ],
+    "url": "spain/madrid/plaza-de-castilla",
+    "country": "ES"
+   }
+  },
+  {
+   "uid": 12717,
+   "aqi": "-",
+   "time": {
+    "tz": "+01:00",
+    "stime": "2025-05-22 14:00:00",
+    "vtime": 1747918800
+   },
+   "station": {
+    "name": "Plaza Elíptica, Madrid, Spain",
+    "geo": [
+     40.384961,
+     -3.718727
+    ],
+    "url": "spain/madrid/plaza-eliptica",
+    "country": "ES"
+   }
+  },
+  {
+   "uid": 3233,
+   "aqi": "-",
+   "time": {
+    "tz": "+01:00",
+    "stime": "1970-01-01 00:00:00",
+    "vtime": 0
+   },
+   "station": {
+    "name": "Media  Red, Madrid, Spain",
+    "geo": [
+     40.4167754,
+     -3.7037902
+    ],
+    "url": "spain/madrid/media--red",
+    "country": "ES"
+   }
+  },
+  {
+   "uid": 6006,
+   "aqi": "52",
+   "time": {
+    "tz": "+00:00",
+    "stime": "2026-10-11 21:00:00",
+    "vtime": 1791752400
+   },
+   "station": {
+    "name": "madrwl; N Lanarkshire Chapelhall, United Kingdom",
+    "geo": [
+     55.84581,
+     -3.947346
+    ],
+    "url": "united-kingdom/scotland/n-lanarkshire-chapelhall",
+    "country": "GB"
+   }
+  },
+  {
+   "uid": 6023,
+   "aqi": "24",
+   "time": {
+    "tz": "+00:00",
+    "stime": "2026-10-11 22:00:00",
+    "vtime": 1791756000
+   },
+   "station": {
+    "name": "madrwl; South Lanarkshire Hamilton, United Kingdom",
+    "geo": [
+     55.774018,
+     -4.03736
+    ],
+    "url": "united-kingdom/scotland/south-lanarkshire-hamilton",
+    "country": "GB"
+   }
+  },
+  {
+   "uid": 8670,
+   "aqi": "20",
+   "time": {
+    "tz": "+00:00",
+    "stime": "2026-10-11 21:00:00",
+    "vtime": 1791752400
+   },
+   "station": {
+    "name": "madrwl; North Lanarkshire Kirkshaw, United Kingdom",
+    "geo": [
+     55.843583,
+     -4.037413
+    ],
+    "url": "united-kingdom/scotland/north-lanarkshire-kirkshaw",
+    "country": "GB"
+   }
+  },
+  {
+   "uid": 9584,
+   "aqi": "19",
+   "time": {
+    "tz": "+00:00",
+    "stime": "2026-10-11 22:00:00",
+    "vtime": 1791756000
+   },
+   "station": {
+    "name": "madrwl; South Lanarkshire Raith Interchange 2, United Kingdom",
+    "geo": [
+     55.798813,
+     -4.058363
+    ],
+    "url": "united-kingdom/scotland/south-lanarkshire-raith-interchange-2",
+    "country": "GB"
+   }
+  },
+  {
+   "uid": 6010,
+   "aqi": "18",
+   "time": {
+    "tz": "+00:00",
+    "stime": "2026-10-11 21:00:00",
+    "vtime": 1791752400
+   },
+   "station": {
+    "name": "madrwl; N Lanarkshire Motherwell, United Kingdom",
+    "geo": [
+     55.788333,
+     -3.986389
+    ],
+    "url": "united-kingdom/scotland/n-lanarkshire-motherwell",
+    "country": "GB"
+   }
+  },
+  {
+   "uid": 6011,
+   "aqi": "18",
+   "time": {
+    "tz": "+00:00",
+    "stime": "2026-10-11 21:00:00",
+    "vtime": 1791752400
+   },
+   "station": {
+    "name": "madrwl; N Lanarkshire Shawhead Coatbridge, United Kingdom",
+    "geo": [
+     55.843523,
+     -4.023222
+    ],
+    "url": "united-kingdom/scotland/n-lanarkshire-shawhead-coatbridge",
+    "country": "GB"
+   }
+  },
+  {
+   "uid": 6007,
+   "aqi": "-",
+   "time": {
+    "tz": "+00:00",
+    "stime": "2022-04-07 08:00:00",
+    "vtime": 1649318400
+   },
+   "station": {
+    "name": "madrwl; N Lanarkshire Coatbridge Whifflet, United Kingdom",
+    "geo": [
+     55.851944,
+     -4.019444
+    ],
+    "url": "united-kingdom/scotland/n-lanarkshire-coatbridge-whifflet",
+    "country": "GB"
+   }
+  },
+  {
+   "uid": 11657,
+   "aqi": "-",
+   "time": {
+    "tz": "+00:00",
+    "stime": "2019-05-31 08:00:00",
+    "vtime": 1559289600
+   },
+   "station": {
+    "name": "madrwl; N Lanarkshire Motherwell Civic Centre, United Kingdom",
+    "geo": [
+     55.783432,
+     -3.98179
+    ],
+    "url": "united-kingdom/scotland/n-lanarkshire-motherwell-civic-centre",
+    "country": "GB"
+   }
+  },
+  {
+   "uid": 6013,
+   "aqi": "-",
+   "time": {
+    "tz": "+00:00",
+    "stime": "2019-03-20 22:00:00",
+    "vtime": 1553119200
+   },
+   "station": {
+    "name": "madrwl; North Lanarkshire Kirkshaws, United Kingdom",
+    "geo": [
+     55.843583,
+     -4.037413
+    ],
+    "url": "united-kingdom/scotland/north-lanarkshire-kirkshaws",
+    "country": "GB"
+   }
+  }
+ ]
+}
