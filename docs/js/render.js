@@ -115,6 +115,7 @@ export function renderError(message) {
 }
 
 // Sustituye a init-google-maps.js: mismo zoom (13) y mismo título del marcador.
+// Sin zoom con la rueda: el mapa ocupa casi toda la ventana y atraparía el scroll de la página.
 export function mountMap(parent, geo) {
     const position = parseGeo(geo);
     if (!position || typeof window.L === 'undefined') {
@@ -126,7 +127,7 @@ export function mountMap(parent, geo) {
     parent.append(mapElement);
 
     const center = [position.lat, position.lng];
-    const map = window.L.map(mapElement).setView(center, 13);
+    const map = window.L.map(mapElement, { scrollWheelZoom: false }).setView(center, 13);
     window.L.tileLayer(OSM_TILES, { maxZoom: 19, attribution: OSM_ATTRIBUTION }).addTo(map);
     window.L.marker(center, { title: 'Your city' }).addTo(map);
     return true;
