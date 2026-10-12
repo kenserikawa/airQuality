@@ -1,0 +1,94 @@
+<!doctype html>
+<!--
+    Plantilla de la imagen para redes sociales (Open Graph / Twitter), 1200×630.
+    Regenerar desde la raíz del repo (necesita web/node_modules para las fuentes). La ventana es más alta
+    que la imagen porque Chrome headless descuenta la barra del navegador del viewport; luego se recorta:
+    google-chrome --headless=new --hide-scrollbars --force-device-scale-factor=1 --window-size=1200,800 \
+        --virtual-time-budget=2000 --screenshot=/tmp/og-raw.png design/og-image.html
+    convert /tmp/og-raw.png -crop 1200x630+0+0 +repage -strip web/public/og-image.png
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>AirQuality — social image</title>
+<style>
+    @font-face { font-family: "Sora"; font-weight: 200; src: url("../web/node_modules/@fontsource/sora/files/sora-latin-200-normal.woff2") format("woff2"); }
+    @font-face { font-family: "Sora"; font-weight: 600; src: url("../web/node_modules/@fontsource/sora/files/sora-latin-600-normal.woff2") format("woff2"); }
+    @font-face { font-family: "Manrope"; font-weight: 500; src: url("../web/node_modules/@fontsource/manrope/files/manrope-latin-500-normal.woff2") format("woff2"); }
+    @font-face { font-family: "Manrope"; font-weight: 700; src: url("../web/node_modules/@fontsource/manrope/files/manrope-latin-700-normal.woff2") format("woff2"); }
+
+    * { box-sizing: border-box; margin: 0; }
+
+    html, body { width: 1200px; height: 630px; overflow: hidden; }
+
+    /* Cielo de la categoría «Good» (aqi.js), con el horizonte más abajo para que el texto blanco contraste. */
+    body {
+        position: relative;
+        color: #fff;
+        font-family: "Manrope", sans-serif;
+        background:
+            radial-gradient(ellipse 60% 55% at 22% 38%, rgba(155, 231, 196, 0.16), transparent 70%),
+            linear-gradient(180deg, #0B3D4F 0%, #1E846C 78%, #9BE7C4 100%);
+        -webkit-font-smoothing: antialiased;
+    }
+
+    .dot { position: absolute; border-radius: 50%; background: #fff; }
+
+    .glass {
+        background: rgba(6, 14, 32, 0.6);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        box-shadow: 0 8px 32px rgba(6, 26, 34, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+    }
+
+    .brand { position: absolute; left: 72px; top: 64px; display: flex; align-items: center; gap: 18px; font-family: "Sora"; font-weight: 600; font-size: 34px; letter-spacing: -0.02em; }
+    .brand-mark { width: 60px; height: 60px; border-radius: 16px; display: flex; align-items: center; justify-content: center; }
+
+    .copy { position: absolute; left: 72px; top: 156px; width: 560px; }
+
+    .label { display: inline-flex; align-items: center; gap: 12px; padding: 9px 18px; border-radius: 9999px; font-size: 15px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; }
+    .label i { width: 11px; height: 11px; border-radius: 50%; background: #9BE7C4; box-shadow: 0 0 14px #9BE7C4; }
+
+    h1 { margin-top: 28px; font-family: "Sora"; font-weight: 200; font-size: 84px; line-height: 0.98; letter-spacing: -0.05em; }
+
+    .sub { margin-top: 26px; font-size: 25px; font-weight: 500; line-height: 1.4; color: rgba(255, 255, 255, 0.92); }
+
+    .url { position: absolute; left: 72px; bottom: 56px; padding: 12px 22px; border-radius: 9999px; font-size: 19px; font-weight: 700; letter-spacing: 0.01em; }
+
+    /* Un cielo por categoría: la idea de la app en una tira. */
+    .skies { position: absolute; right: 72px; top: 64px; bottom: 56px; display: flex; gap: 12px; }
+    .sky { position: relative; width: 66px; border-radius: 9999px; border: 1px solid rgba(255, 255, 255, 0.28); box-shadow: 0 24px 50px rgba(7, 30, 39, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.3); }
+    .sky span { position: absolute; left: 50%; top: 30px; transform: translateX(-50%); writing-mode: vertical-rl; font-size: 17px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; white-space: nowrap; }
+</style>
+</head>
+<body>
+    <div class="dot" style="left: 690px; top: 120px; width: 5px; height: 5px; opacity: .35"></div>
+    <div class="dot" style="left: 610px; top: 300px; width: 7px; height: 7px; opacity: .25"></div>
+    <div class="dot" style="left: 470px; top: 92px; width: 4px; height: 4px; opacity: .4"></div>
+    <div class="dot" style="left: 120px; top: 560px; width: 6px; height: 6px; opacity: .3"></div>
+    <div class="dot" style="left: 560px; top: 520px; width: 4px; height: 4px; opacity: .35"></div>
+
+    <div class="brand">
+        <span class="brand-mark glass">
+            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.8 19.6A2 2 0 1 0 14 16H2"/><path d="M17.5 8a2.5 2.5 0 1 1 2 4H2"/><path d="M9.8 4.4A2 2 0 1 1 11 8H2"/></svg>
+        </span>
+        AirQuality
+    </div>
+
+    <div class="copy">
+        <span class="label glass"><i></i>Air Quality Index · Live</span>
+        <h1>See the air<br>around you.</h1>
+        <p class="sub">Real-time AQI for any city or station, under a sky that changes color with the air.</p>
+    </div>
+
+    <div class="url glass">kenserikawa.github.io/airQuality</div>
+
+    <div class="skies" aria-hidden="true">
+        <div class="sky" style="background: linear-gradient(180deg, #0B3D4F 0%, #1E846C 70%, #9BE7C4 100%)"><span>Good</span></div>
+        <div class="sky" style="background: linear-gradient(180deg, #3B3A1E 0%, #8F731C 70%, #F6E7A1 100%)"><span>Moderate</span></div>
+        <div class="sky" style="background: linear-gradient(180deg, #4A2511 0%, #B1611C 70%, #F9C784 100%)"><span>Sensitive</span></div>
+        <div class="sky" style="background: linear-gradient(180deg, #3D0E12 0%, #C0392B 70%, #F28B82 100%)"><span>Unhealthy</span></div>
+        <div class="sky" style="background: linear-gradient(180deg, #1E0B33 0%, #6A3FA0 70%, #C3A6E8 100%)"><span>Very unhealthy</span></div>
+        <div class="sky" style="background: linear-gradient(180deg, #1A0606 0%, #6B1D1D 70%, #B5654A 100%)"><span>Hazardous</span></div>
+    </div>
+</body>
+</html>
